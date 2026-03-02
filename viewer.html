@@ -100,22 +100,22 @@
     .result-buttons {
       margin-top: 15px;
       display: flex;
-      justify-content: center;   /* ← 中央寄せ */
+      justify-content: center;  
       align-items: center;
     }
 
     .result-buttons button {
-      margin: 0 auto;   /* ← 中央揃え */
-      display: block;   /* ← ボタンをブロック化して中央へ */
+      margin: 0 auto; 
+      display: block;  
     }
 
     .toggle-btn {
-        width: 80%;           /* ← 少し小さめ（好みにより70〜90%で調整可） */
-        max-width: 260px;     /* ← 見た目が“ちょうどいい”サイズ */
+        width: 80%;   
+        max-width: 260px;     
         margin: 15px auto 5px;
 
-        padding: 10px 16px;   /* ← 高さ少し小さく */
-        font-size: 18px;      /* ← 文字少し小さく */
+        padding: 10px 16px;
+        font-size: 18px;     
         font-weight: 600;
 
         background: #ffffff;
@@ -134,7 +134,7 @@
       }
 
       .toggle-btn .icon {
-        font-size: 20px;   /* ← アイコンも小さく */
+        font-size: 20px;   
       }
 
 
@@ -198,10 +198,8 @@
     let userFilterInitialized = false;
     
     async function fetchHistory(user, filterUid = ""){
-    // --- URL組み立て ---
     let url = `https://yoyo-backend.kajilab.dev/results_user?uid=${user.uid}&email=${user.email}`;
 
-    // 👑 管理者 + ユーザー絞り込み
     if (filterUid) {
       url += `&filter_uid=${filterUid}`;
     }
@@ -217,7 +215,6 @@
       return;
     }
 
-    // 🔥 管理者判定
     const ADMIN_EMAIL = "prj.yoyo@gmail.com";
     const isAdmin = user.email === ADMIN_EMAIL;
 
@@ -257,8 +254,6 @@
   }
 
 
-
-  // URL パラメータから id を取得して自動で開く処理
 document.addEventListener("DOMContentLoaded",()=>{
   const params=new URLSearchParams(window.location.search);
   const targetId=params.get("id");
@@ -312,7 +307,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if (result.status === "deleted") {
       alert("削除しました");
       const u = firebase.auth().currentUser;
-      fetchHistory(u);      // ← 修正後
+      fetchHistory(u);      
     } else {
       alert("削除に失敗しました");
     }
@@ -324,21 +319,18 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     const isClosed = container.style.display === 'none';
 
-    // --- アイコンと文言切り替え ---
     if (isClosed) {
       button.innerHTML = `<span class="icon">▲</span> 閉じる`;
     } else {
       button.innerHTML = `<span class="icon">▼</span> 詳細を開く`;
     }
 
-    // --- 閉じる処理 ---
     if (!isClosed) {
       container.style.display = 'none';
       container.innerHTML = "";
       return;
     }
 
-    // --- データ取得 ---
     const res = await fetch(`https://yoyo-backend.kajilab.dev/results/${id}`);
     const detail = await res.json();
 
@@ -353,7 +345,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
     // =======================================================
-    // ② コメントカード（レーダーチャートのすぐ下）
+    // ② コメントカード
     // =======================================================
     if (detail.type || detail.comments) {
       html += `
@@ -618,7 +610,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if (!survey) return "";
 
     const labels = {
-      // 事前アンケート（フォームと同じ順序・文言に揃える）
+      // 事前アンケート
 
       age: "1. 年齢",
       history: "2. ヨーヨー歴（どのくらい続けていますか？）",
@@ -664,7 +656,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       "future-trick", "system-comment"
     ];
 
-    // タイトルでどちらか判定
+   
     const order = title.includes("事前") ? order_pre : order_post;
 
     let rows = "";
@@ -740,7 +732,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   function renderSummaryTable(surveys) {
     if (!surveys.length) return "<p>データなし</p>";
 
-    // 集計例：選択肢の出現回数カウント
+
     let counts = {};
     surveys.forEach(s => {
       for (const [k, v] of Object.entries(s)) {
@@ -764,7 +756,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
- // id付きでアクセスした場合 → その履歴だけを全画面表示
 if (id) {
   const container = document.getElementById("history");
   container.innerHTML = "<p>読み込み中...</p>";
@@ -774,14 +765,12 @@ if (id) {
     if (!res.ok) throw new Error("データ取得に失敗");
     const detail = await res.json();
 
-    // --- YouTube ID 抽出用関数 ---
     const extractYouTubeId = (url) => {
       const regExp = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S*?v=|v\/|embed\/|shorts\/|watch\?v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
       const match = url?.match(regExp);
       return match ? match[1] : null;
     };
 
-    // --- 動画埋め込みHTML ---
     let videoHTML = "";
     if (detail.video_url) {
       const youtubeId = extractYouTubeId(detail.video_url);
@@ -800,7 +789,6 @@ if (id) {
       }
     }
 
-    // --- 詳細のみ表示 ---
     container.innerHTML = `
       <div class="result">
         <p>${detail.timestamp ?? ""}</p>
@@ -838,30 +826,30 @@ if (id) {
     container.innerHTML = "<p>データの読み込みに失敗しました。</p>";
   }
 } else {
-  // ▼ログイン完了後に一覧を表示
+
   firebase.auth().onAuthStateChanged(user =>{
     if(!user) {
       location.href="index.html";
       return;
     }
-    // 🔥 管理者判定
+
     const ADMIN_EMAIL = "prj.yoyo@gmail.com";
     const isAdmin = user.email === ADMIN_EMAIL;
 
-    // 🔥 管理者だけアンケート集計ボタンを表示
+  
     const surveyBtn = document.getElementById("survey-summary-btn");
     if (surveyBtn && isAdmin) {
       surveyBtn.style.display = "inline-block";
       
     }
 
-      // 管理者だけ：ユーザー絞り込みセレクトを有効化
+    
     if (isAdmin) {
       const select = document.getElementById("user-filter");
       if (select) {
         select.style.display = "inline-block";
 
-        // ★④ セレクト変更時に再取得 ← ここ
+       
         select.addEventListener("change", e => {
           fetchHistory(user, e.target.value);
         });
@@ -898,7 +886,7 @@ async function uploadVideo(id) {
   if (res.ok) {
     alert("動画URLを保存しました！");
     const preview = document.getElementById(`video-preview-${id}`);
-    if (preview) preview.remove(); // 既存プレビュー削除
+    if (preview) preview.remove(); 
     const container = document.getElementById(`detail-${id}`);
     container.innerHTML += `
       <div id="video-preview-${id}" style="margin-top:20px;">
@@ -921,12 +909,10 @@ async function uploadVideo(id) {
 
   </script>
 
-  <!-- 🔥 Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script>
-// === あなたのプロジェクト設定 ===
 firebase.initializeApp({
   apiKey: "AIzaSyCIoMI9P-shqBz6RF38L_V9PG3bl5J7Pbc",
   authDomain: "yoyo-sensing.firebaseapp.com",

@@ -126,7 +126,7 @@ def add_user_column():
         conn.commit()
     conn.close()
 
-add_user_column()  # ←★起動時に一度だけ実行
+add_user_column()  
 
 def add_user_name_column():
     conn = sqlite3.connect(DB_PATH)
@@ -158,21 +158,20 @@ def encode_1d_heatmap(values: np.ndarray, title: str, lang="ja") -> str:
     """
     fig, ax = plt.subplots(figsize=(8, 2))
 
-    mat = values.reshape(1, -1)   # ← 1×N に変形
+    mat = values.reshape(1, -1)  
     cax = ax.imshow(mat, cmap="coolwarm", aspect="auto")
     cb = plt.colorbar(cax, ax=ax)
 
     ax.set_title(title, fontproperties=font_prop, fontsize=16)
 
-    # x軸 = ループ番号
+
     ax.set_xticks(np.arange(len(values)))
     ax.set_xticklabels([str(i+1) for i in range(len(values))],
                        fontproperties=font_prop)
 
-    # y軸は意味を持たないので消す
     ax.set_yticks([])
 
-    # カラーバーのフォント
+
     for t in cb.ax.get_yticklabels():
         t.set_fontproperties(font_prop)
 
@@ -302,7 +301,7 @@ def save_result_to_db(result, user_id, user_name=None, email=None):
         result.get("loop_duration_list"),
         result.get("loop_max_acc_list"),
         result.get("user_id"),
-        result.get("user_name"),   # ← ★追加
+        result.get("user_name"),   
         result.get("email") ,
         result.get("type"),
         json.dumps(result.get("comments"), ensure_ascii=False)
@@ -335,7 +334,7 @@ def encode_heatmap(mat: np.ndarray, title: str) -> str:
     cax = ax.matshow(mat, cmap='coolwarm')
     cb = plt.colorbar(cax)
 
-    # ▼ 日本語フォントを明示
+ 
     ax.set_title(title, fontproperties=font_prop, fontsize=16)
 
     ticks  = list(range(mat.shape[0]))
@@ -345,7 +344,6 @@ def encode_heatmap(mat: np.ndarray, title: str) -> str:
     ax.set_xticklabels(labels, fontproperties=font_prop)
     ax.set_yticklabels(labels, fontproperties=font_prop)
 
-    # カラーバーの目盛にもフォントを適用
     for t in cb.ax.get_yticklabels():
         t.set_fontproperties(font_prop)
 
@@ -416,10 +414,10 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_snap = 0
 
     elif snap_std <= 15:
-        s_snap = 5     # 15以下 → 超安定で満点
+        s_snap = 5  
 
     elif snap_std >= 60:
-        s_snap = 0     # 60以上 → バラつき大で0点
+        s_snap = 0    
 
     else:
         s_snap = 5 * (60 - snap_std) / (60 - 15)
@@ -434,10 +432,10 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
     if stable_loop is None or loop_count is None:
         s_stable = 0
     else:
-        # 総ループ数に応じてスケーリング
-        scale = loop_count / 10.0  # 10周を基準
-        max_full_score_loop = int(round(2 * scale))   # 5点の閾値
-        min_full_zero_loop = int(round(7 * scale))    # 0点の閾値
+     
+        scale = loop_count / 10.0  
+        max_full_score_loop = int(round(2 * scale))   
+        min_full_zero_loop = int(round(7 * scale))  
 
         if stable_loop <= max_full_score_loop:
             s_stable = 5
@@ -452,7 +450,6 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
     elif pro_distance>=130:   s_pro=0
     else:                     s_pro=5*(130-pro_distance)/(130-30)
 
-    # ここを変更：外から来た labels を使う。無ければ日本語デフォルト
     if labels is None:
         labels = ['自身の類似度','平均ループ時間','ループ時間のばらつき','安定開始ループ','プロ類似度']
 
@@ -819,7 +816,7 @@ def analyze():
             if len(acc) != len(gyro):
                 raise ValueError("加速度と角速度の長さが一致していません")
 
-            # 周波数（適宜調整）
+            # 周波数
             SAMPLE_FREQ = 100.0
             mad = Madgwick(sampleperiod=1.0 / SAMPLE_FREQ)
 
@@ -831,14 +828,14 @@ def analyze():
             for a, g in zip(acc, gyro):
                 t = a["t"]
 
-                # 時間差でサンプル周期を自動調整
+                
                 if last_t is not None:
                     dt = (t - last_t) / 1000.0
                     if dt > 0:
                         mad.Dt = dt
                 last_t = t
 
-                # 軸補正（あなたが導いた正しい式）
+             
                 gyro_vec = np.array([
                     -g["gy"],
                     g["gz"],
@@ -904,9 +901,9 @@ def save_result():
     if not result:
         return jsonify({"error": "No result data"}), 400
     
-    uid  = result.get("user_id")      # ← Google UID
-    name = result.get("user_name")    # ← ⭐ Google表示名 ここが今回追加
-    email = result.get("email")      # ← 任意（管理向け表示用にも使える）
+    uid  = result.get("user_id")     
+    name = result.get("user_name")   
+    email = result.get("email")      
 
     if not uid:
         return jsonify({"error": "user_id is required"}), 400
@@ -970,7 +967,7 @@ def get_result_detail(result_id):
 def get_results_user():
     uid = request.args.get("uid")
     email = request.args.get("email")
-    filter_uid = request.args.get("filter_uid")  # ← 追加
+    filter_uid = request.args.get("filter_uid")  
 
     conn = sqlite3.connect(DB_PATH)
     cur  = conn.cursor()
@@ -1064,7 +1061,6 @@ def download_result_csv(result_id):
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         for label, content in [("acc", acc_csv or ''), ("gyro", gyro_csv or '')]:
             zi = zipfile.ZipInfo(f"{name or 'result'}_{label}.csv")
-            # ZIPに書き込むファイルの更新日時をJSTで設定
             zi.date_time = (jst_dt.year, jst_dt.month, jst_dt.day,
                             jst_dt.hour, jst_dt.minute, jst_dt.second)
             zf.writestr(zi, content)
@@ -1108,7 +1104,7 @@ def update_result(result_id):
 @app.route("/results/<int:result_id>/survey", methods=["PUT"])
 def save_survey(result_id):
     data = request.get_json()
-    survey_type = data.get("survey_type")  # "pre" or "post"
+    survey_type = data.get("survey_type") 
     answers = data.get("answers")
 
     if survey_type not in ["pre", "post"]:
@@ -1139,7 +1135,7 @@ def survey_summary():
     conn.close()
 
     pre_all, post_all, scores = [], [], []
-    pre_map = {}  # id → pre_survey
+    pre_map = {} 
 
     # ① pre_survey を収集
     for row in rows:
@@ -1163,7 +1159,7 @@ def survey_summary():
                 post_json["name"] = name
                 post_json["total_score"] = total
                 post_json["pro_distance_mean"] = pro_mean
-                post_json["pro_distance_median"] = pro_median  # ✅ 追加
+                post_json["pro_distance_median"] = pro_median  
                 post_json["score"] = score
                 post_json["raw_self_distance"] = raw_self
                 post_json["raw_self_median"] = raw_self_median
@@ -1171,7 +1167,7 @@ def survey_summary():
                 post_json["snap_std"] = snap_std
                 
 
-                # skill は pre_survey と対応
+            
                 pre = pre_map.get(id_)
                 if pre and "skill" in pre:
                     post_json["skill"] = pre["skill"]

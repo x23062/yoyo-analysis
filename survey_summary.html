@@ -146,9 +146,9 @@
     drawAgeChart(data.pre);
     drawFreqChart(data.pre);
     drawHistoryChart(data.pre);
-    drawTroubleChart(data.pre); // ← 追加！
-    drawPracticeChart(data.pre); // ← 追加！
-    drawSkillDistributionChart(data.pre); // ← これ追加！
+    drawTroubleChart(data.pre); 
+    drawPracticeChart(data.pre); 
+    drawSkillDistributionChart(data.pre); 
     }
 
 
@@ -157,7 +157,7 @@
       // スコア付きの散布図
       if (data.pre?.length) {
     drawHistoryScoreChart(data.pre);
-    drawSkillScoreChart(data.pre); // ← これ追加！
+    drawSkillScoreChart(data.pre); 
     }
 
     if (data.post?.length) {
@@ -561,7 +561,7 @@ function drawTroubleChart(preSurveys) {
       }]
     },
     options: {
-      indexAxis: "y", // ← 横向き棒グラフ
+      indexAxis: "y", 
       responsive: false,
       plugins: {
         title: {
@@ -587,7 +587,7 @@ function drawTroubleChart(preSurveys) {
 
 // === 得意度（0〜5） ===
 function drawSkillDistributionChart(preSurveys) {
-  const counts = [0, 0, 0, 0, 0, 0]; // 0〜5のカウント配列
+  const counts = [0, 0, 0, 0, 0, 0]; 
 
   preSurveys.forEach(s => {
     const num = parseInt(s.skill);
@@ -660,7 +660,7 @@ function drawDiscomfortChart(postSurveys) {
       }]
     },
     options: {
-      indexAxis: "y", // 横棒グラフ
+      indexAxis: "y", 
       responsive: false,
       plugins: {
         legend: { display: false },
@@ -715,7 +715,7 @@ function drawWeightfitChart(postSurveys) {
       }]
     },
     options: {
-      indexAxis: "y", // ← 横棒グラフ
+      indexAxis: "y", 
       responsive: false,
       plugins: {
         legend: { display: false },
@@ -794,7 +794,7 @@ function drawResultviewChart(postSurveys) {
       }]
     },
     options: {
-      indexAxis: "y", // ← 横棒グラフ
+      indexAxis: "y", 
       responsive: false,
       plugins: {
         legend: { display: false },
@@ -853,7 +853,7 @@ function drawUsefulChart(postSurveys) {
       }]
     },
     options: {
-      indexAxis: "y", // ← 横棒グラフ
+      indexAxis: "y",
       responsive: false,
       plugins: {
         legend: { display: false },
@@ -911,7 +911,7 @@ function drawContinueChart(postSurveys) {
       }]
     },
     options: {
-      indexAxis: "y", // ← 横棒グラフ
+      indexAxis: "y", 
       responsive: false,
       plugins: {
         legend: { display: false },
@@ -964,7 +964,7 @@ function drawFutureTrickChart(postSurveys) {
 
   // ✅ ラベル数に応じてキャンバス高さを自動調整
   const canvas = document.getElementById("futureTrickChart");
-  const barHeight = 35; // 1項目あたりの高さ(px)
+  const barHeight = 35; 
   canvas.height = sortedLabels.length * barHeight;
 
   const ctx = canvas.getContext("2d");
@@ -1292,7 +1292,7 @@ function drawSkillScoreChart(preSurveys) {
 
   
 
-  const categories = ["0", "1", "2", "3", "4", "5"]; // 軸ラベル用
+  const categories = ["0", "1", "2", "3", "4", "5"]; 
 
   // --- skillを数値スケールとして扱う ---
   const numericData = preSurveys
@@ -1300,7 +1300,7 @@ function drawSkillScoreChart(preSurveys) {
       const skillNum = parseFloat(s.skill);
       const score = parseFloat(s.total_score);
       return !isNaN(skillNum) && !isNaN(score)
-        ? { x: skillNum, y: score, id: s.id } // ← idを保持！
+        ? { x: skillNum, y: score, id: s.id } 
         : null;
     })
     .filter(Boolean);
@@ -1392,7 +1392,6 @@ function drawSkillScoreChart(preSurveys) {
             ticks: {
             stepSize: 1,
             callback: (value) => {
-                // 整数だけ表示（0,1,2,3,4,5）
                 return Number.isInteger(value) ? value.toString() : "";
             }
             },
@@ -1721,9 +1720,9 @@ function drawRawSelfMedianSkillChart(postSurveys) {
           title: {
             display: true,
             text: "ループ間の類似度距離の中央値（小さいほど類似）",
-            font: { size: 20 }   // ← Y軸ラベル
+            font: { size: 20 }  
           },
-          ticks: { font: { size: 20 } },  // ← Y軸目盛り
+          ticks: { font: { size: 20 } }, 
           beginAtZero: true
         }
       }
@@ -1814,9 +1813,9 @@ function drawProMedianSkillChart(postSurveys) {
           title: {
             display: true,
             text: "プロとの距離（小さいほど類似）",
-            font: { size: 20 }   // ← Y軸ラベル
+            font: { size: 20 }  
           },
-          ticks: { font: { size: 20 } },  // ← Y軸目盛り
+          ticks: { font: { size: 20 } }, 
           beginAtZero: true
         }
       }
@@ -1892,8 +1891,8 @@ function drawLoopStdSkillChart(postSurveys) {
         },
         legend: {
           labels: {
-            usePointStyle: true,  // ← ポイントの形状を凡例にも反映
-            pointStyle: 'circle'  // ← 丸にする
+            usePointStyle: true,  
+            pointStyle: 'circle' 
           }
         }
       },
@@ -1913,9 +1912,9 @@ function drawLoopStdSkillChart(postSurveys) {
           title: {
             display: true,
             text: "ループ時間のばらつき（標準偏差）[s]",
-            font: { size: 20 }   // ← Y軸ラベル
+            font: { size: 20 }   
           },
-          ticks: { font: { size: 20 } },  // ← Y軸目盛り
+          ticks: { font: { size: 20 } },  
           beginAtZero: true
         }
       }
@@ -1997,15 +1996,15 @@ function drawSnapStdSkillChart(postSurveys) {
                 text: ds.label,
                 fillStyle: ds.backgroundColor || ds.borderColor,
                 strokeStyle: ds.borderColor,
-                lineWidth: ds.type === "line" ? 4 : 0, // ← 回帰線用の「━」
-                pointStyle: ds.type === "line" ? "line" : "circle", // ← 丸 or 線
-                pointRadius: ds.type === "line" ? 6 : 5, // ← 丸は小さく
+                lineWidth: ds.type === "line" ? 4 : 0, 
+                pointStyle: ds.type === "line" ? "line" : "circle", 
+                pointRadius: ds.type === "line" ? 6 : 5, 
                 hidden: !chart.isDatasetVisible(i),
                 datasetIndex: i
               }));
             },
-            boxWidth: 8, // ← 凡例アイコンの横幅
-            boxHeight: 8 // ← 凡例アイコンの高さ（丸が小さくなる）
+            boxWidth: 8, 
+            boxHeight: 8 
           }
         }
 
@@ -2017,18 +2016,18 @@ function drawSnapStdSkillChart(postSurveys) {
           // max: 5.4,
           ticks: {
             stepSize: 1,
-            font: { size: 20 },  // ← X軸の目盛りの文字サイズ
+            font: { size: 20 }, 
             callback: (v) => Number.isInteger(v) ? v.toString() : ""
           },
-          title: { display: true, text: "得意不得意（0=不得意, 5=得意）", font: { size: 18 } } // ← X軸ラベル
+          title: { display: true, text: "得意不得意（0=不得意, 5=得意）", font: { size: 18 } }
         },
         y: {
           title: {
             display: true,
             text: "スナップの強さのばらつき（標準偏差）[m/s²]",
-            font: { size: 20 }   // ← Y軸ラベル
+            font: { size: 20 }   
           },
-          ticks: { font: { size: 20 } },  // ← Y軸目盛り
+          ticks: { font: { size: 20 } },  
           beginAtZero: true
         }
       }

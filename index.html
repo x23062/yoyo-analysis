@@ -29,15 +29,14 @@
     #score, #loopSummary, #loopDetails, #proDistance { font-size: 30px;}
     pre { background: #f4f4f4; padding: 10px; max-height: 200px; overflow: auto; }
 
-    /* プログレスバー用 */
+  
     #loading {
-      /* 親要素を固定幅に */
-      display: none;      /* ここで初期非表示に固定 */
+      display: none;     
       width: 1000px;       
       max-width: 90%;
       box-sizing: border-box;
       text-align: left;
-      position: fixed;    /* 既存のルールもそのまま */
+      position: fixed;   
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -48,7 +47,6 @@
     }
 
     #loading .progress-container {
-      /* 親要素いっぱいに広がる */
       width: 100%;
       background: #ddd;
       border-radius: 5px;
@@ -84,8 +82,8 @@
 
     #appTitle {
       font-size: 50px;
-      margin: 20px 0;   /* ← 83px → 20px に縮める */
-      padding: 10px 0;  /* ← 背景に余白があるならここで調整 */
+      margin: 20px 0;   
+      padding: 10px 0;  
     }
 
 
@@ -119,28 +117,24 @@
       min-height: 3em;
       text-align: center;
     }
-    /* ── レーダーチャート用ツールチップ ── */
     .radar-wrap {
       position: relative;
       display: inline-block;
     }
     .radar-tip {
       position: absolute;
-      width: 220px;   /* 横幅を広げる（例: 2倍） */
+      width: 220px;  
       height: 60px; 
-      /* ↓ デバッグ用可視化 ↓ */
-      /* background: rgba(0, 128, 255, 0.2); 半透明ブルー */
-      /* outline: 1px dashed rgba(0, 128, 255, 0.8); 枠線 */
     }
    .radar-tip .hotspot {
-      width: 100%;         /* 横幅を拡大（10% → 16%） */
-      height: 48px;       /* 高さは固定値で維持 */
-      border-radius: 50%; /* 丸みを維持するなら50% */
+      width: 100%;     
+      height: 48px;      
+      border-radius: 50%; 
       pointer-events: auto;
     }
     .radar-tip .tooltip {
       position: absolute;
-      top: -12px; /* 位置は各tipで上書き可 */
+      top: -12px;
       left: 50%;
       transform: translate(-50%, -100%);
       background: #ACC7DF;
@@ -160,21 +154,16 @@
       opacity: 1;
     }
     
-
-    /* レーダーの重なり順を最前面に */
     .radar-wrap { position: relative; z-index: 10; overflow: visible; }
     .radar-tip { position: absolute; transform: translate(-50%, -50%); z-index: 15; }
     .radar-tip .hotspot { 
       width: 12%;
-      /* /* もし Chrome/Safari で hover しにくい場合は、下の min-height を有効化 */
       min-height: 60px;  
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       pointer-events: auto;
     }
     
-
-    /* ヒートマップ一帯は横書きで固定（強めの特異性 + !important） */
     #Rui .hm-wrap > .hm-tip,
     #Rui .hm-wrap > .hm-tip .tooltip,
     #Rui .hm-wrap > .hm-tip .tooltip * {
@@ -183,20 +172,17 @@
       direction: ltr !important;
     }
 
-    /* ツールチップの実サイズを親(28px)に依存させない */
     #Rui .hm-wrap > .hm-tip .tooltip{
       position: absolute;
       bottom: calc(100% + 10px);
       left: 0%;
-      /* transform: translateX(-50%); */
 
-      display: block !important;          /* shrink-to-fit回避 */
+      display: block !important;        
       width: clamp(360px, 60vw, 800px) !important;
       min-width: 500px !important;
       max-height: 70vh;
       overflow: auto;
 
-      /* 日本語の自然な折返し */
       white-space: normal !important;
       word-break: normal !important;
       overflow-wrap: break-word !important;
@@ -221,23 +207,21 @@
       position: absolute;
       top: 100%;
       left: 0%;
-      /* transform: translateX(-50%); */
       border: 6px solid transparent;
       border-top-color: gray;
     }
 
-    /* 画像＋ⓘ の包みを絶対配置の基準にする */
     #Rui .hm-wrap{
-      position: relative;            /* ←これが必須 */
+      position: relative;            
       display: inline-block;
       max-width: 100%;
-      text-align: initial;           /* 親の center の影響を受けない保険 */
+      text-align: initial;     
     }
     #Rui .hm-wrap img{ display:block; height:auto; }
 
-    /* ⓘ ボタンを画像の右上に重ねる */
+ 
     #Rui .hm-wrap .hm-tip{
-      position: absolute;            /* ← ここで重ねる */
+      position: absolute;        
       top: 8px;
       left: 8px;
       width: 28px; height: 28px; border-radius: 50%;
@@ -246,14 +230,13 @@
       z-index: 2;
     }
 
-    /* ツールチップは i のサイズに依存させず固定幅で */
     #Rui .hm-wrap .hm-tip .tooltip{
       position: absolute;
       bottom: calc(100% + 10px);
       left: 0%;
-      /* transform: translateX(-50%); */
 
-      width: clamp(360px, 60vw, 800px);  /* しっかり横幅を確保 */
+
+      width: clamp(360px, 60vw, 800px); 
       max-height: 70vh; overflow: auto;
 
       white-space: normal;
@@ -266,7 +249,7 @@
       padding: 10px 12px; border-radius: 8px;
       opacity: 0; pointer-events: none; transition: opacity .15s;
       text-align: center; z-index: 3;
-      font-weight: normal; /* 太字解除 */
+      font-weight: normal; 
     }
     #Rui .hm-wrap .hm-tip:hover .tooltip,
     #Rui .hm-wrap .hm-tip:focus .tooltip{ opacity: 1; }
@@ -274,27 +257,22 @@
     #Rui .hm-wrap .hm-tip .tooltip::after{
       content: ""; position: absolute; top: 100%;
       left: 0%; 
-      /* transform: translateX(-50%); */
       border: 6px solid transparent; border-top-color: gray;
     }
-    /* ── インライン数値に付けるツールチップ ── */
     .inline-tip {
       position: relative;
       cursor: help;
-      border-bottom: 2px dotted rgba(0,0,0,.35); /* 下線でヒント感 */
+      border-bottom: 2px dotted rgba(0,0,0,.35); 
     }
 
-    /* ツールチップ本体（子要素） */
     .inline-tip .bubble {
       position: absolute;
       bottom: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
-      /* ★ここを可変に */
       display: inline-block;
-      width: fit-content;               /* 中身の幅にフィット */
-      max-width: 1000%;      /* 画面や可読性の上限だけ残す */
-      /* 1行に収めたいなら ↓ を normal → nowrap に */
+      width: fit-content;         
+      max-width: 1000%;    
       white-space: nowrap;
 
       max-height: 60vh;
@@ -312,17 +290,15 @@
       transition: opacity .15s ease;
       z-index: 30;
 
-      /* 念のため：縦書き汚染を遮断 */
       writing-mode: horizontal-tb !important;
       text-orientation: mixed !important;
-      font-weight: normal; /* 太字継承を遮断 */
+      font-weight: normal; 
       text-align: center;
       white-space: nowrap;
       word-break: normal;
       overflow-wrap: break-word;
     }
 
-    /* 吹き出し三角 */
     .inline-tip .bubble::after {
       content: "";
       position: absolute;
@@ -338,7 +314,6 @@
       opacity: 1;
     }
 
-        /* ラベル側でも必ず横書き＆太字継承を遮断 */
     .inline-tip,
     .inline-tip * {
       writing-mode: horizontal-tb !important;
@@ -348,9 +323,9 @@
 
     .inline-tip {
       position: relative;
-      display: inline-block;      /* 相対基準 & hoverしやすい */
+      display: inline-block;      
       cursor: help;
-      border-bottom: 2px dotted rgba(0,0,0,.35); /* ラベルにも下線 */
+      border-bottom: 2px dotted rgba(0,0,0,.35); 
     }
 
     .metric-line { margin: 8px 0 4px; }
@@ -358,7 +333,7 @@
 
     .num-red {
       color: red;
-      font-weight: bold; /* 必要なら削除可 */
+      font-weight: bold; 
     }
 
     .video-wrap{
@@ -371,12 +346,11 @@
     }
     .video-wrap iframe{ width:100%; height:100%; border:0; display:block; }
 
-    /* ▼ すべてのボタンの無効状態（disabled）を統一デザインにする */
     button:disabled {
-      background: #eaeaea !important;   /* グレーを統一 */
-      color: #b5b5b5 !important;        /* 文字色も同じく薄く */
+      background: #eaeaea !important;   
+      color: #b5b5b5 !important;        
       border: 1px solid #dcdcdc !important;
-      opacity: 1 !important;            /* ← これがとても重要！ */
+      opacity: 1 !important;          
       cursor: not-allowed;
     }
 
@@ -392,7 +366,6 @@
     #typeLabel {
       text-align: center !important;
     }
-    /* ===== コメントカード全体 ===== */
     .comment-card {
       background: #ffffff;
       padding: 20px 30px;
@@ -402,10 +375,9 @@
       max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      text-align: center;   /* 中央揃え */
+      text-align: center;   
     }
 
-    /* 見出し（強み・弱み・改善案） */
     .comment-card .blockTitle {
       font-size: 30px;
       margin-bottom: 8px;
@@ -413,7 +385,6 @@
       text-align: center;
     }
 
-    /* リストは左寄せにする */
     .comment-card ul {
       text-align: left;
       margin: 0 auto;
@@ -422,7 +393,6 @@
       line-height: 1.6;
     }
 
-    /* ===== メトリクス（総ループ数〜スナップ）カード ===== */
     .metric-card {
       background: #ffffff;
       padding: 25px 30px;
@@ -462,7 +432,6 @@
         margin-right: auto;
     }
 
-    /* ▼ CSVエリアを完全に中央揃えにする */
     #csvTitle,
     #accLabel,
     #gyroLabel,
@@ -473,12 +442,11 @@
         margin-right: auto !important; 
     }
 
-    /* pre（CSV中身）は幅が広いので中央に寄せる */
     #accOutput,
     #gyroOutput {
         max-width: 500px;
         font-size: 18px;
-        text-align: center !important;  /* 内容は左寄せ維持 */
+        text-align: center !important; 
         margin-left: auto;
         margin-right: auto;
     }
@@ -489,7 +457,6 @@
         text-align: center;
     }
 
-    /* ===== お知らせ欄 ===== */
     #newsBox {
       max-width: 900px;
       margin: 40px auto 30px;
@@ -500,7 +467,6 @@
       text-align: center;
     }
 
-    /* ヘッダー完全中央 */
     .news-header {
       display: flex;
       justify-content: center;
@@ -509,7 +475,6 @@
       margin-bottom: 12px;
     }
 
-    /* 見出し */
     .news-title {
       font-size: 32px;
       font-weight: bold;
@@ -520,7 +485,6 @@
       color: #888;
     }
 
-    /* リスト本体 */
     .news-list {
       list-style: none;
       padding: 0;
@@ -529,7 +493,6 @@
       overflow-y: auto;
     }
 
-    /* 各行：横・縦ともに中央 */
     .news-list li {
       display: flex;
       justify-content: center;
@@ -538,15 +501,13 @@
       padding: 8px 0;
       border-bottom: 1px solid #eee;
       font-size: 22px;
-      text-align: center;      /* ← 念のため */
+      text-align: center;     
     }
 
-    /* 最終行の下線削除 */
     .news-list li:last-child {
       border-bottom: none;
     }
 
-    /* 日付 */
     .news-date {
       font-size: 18px;
       color: #666;
@@ -554,13 +515,11 @@
       text-align: center;
     }
 
-    /* 本文 */
     .news-text {
       writing-mode: horizontal-tb !important;
       text-orientation: mixed !important;
     }
 
-    /* NEW バッジ */
     .news-badge {
       font-size: 16px;
       padding: 2px 8px;
@@ -599,13 +558,11 @@
 
 
   </style>
-  <!-- ============================
-  🔥 Firebase 認証読み込み
-  =============================== -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
-  // ===== Firebase 設定 =====
+
   const firebaseConfig = {
     apiKey: "AIzaSyCIoMI9P-shqBz6RF38L_V9PG3bl5J7Pbc",
     authDomain: "yoyo-sensing.firebaseapp.com",
@@ -617,19 +574,16 @@
   firebase.initializeApp(firebaseConfig);
 
 
-  // ============================
-  // 🔥 index画面にログイン機能統合
-  // ============================
   function googleLogin(){
     const provider=new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
-      .then(()=>location.reload())   // ←ログイン後に即画面反映
+      .then(()=>location.reload())  
       .catch(err=>alert("ログイン失敗: "+err));
   }
 
   function googleLogin(){
     const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" }); // ←これが最重要！
+    provider.setCustomParameters({ prompt: "select_account" }); 
 
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION).then(()=>{
       return firebase.auth().signInWithPopup(provider);
@@ -641,17 +595,12 @@
 
   function logout(){
     firebase.auth().signOut().then(()=>{
-      // ここで完全に自動ログインを無効化
       sessionStorage.clear();
       localStorage.clear();
       location.reload();
     });
   }
 
-
-  // ===========================================
-  // 🔥 DOMロード後にログイン状態で表示を切替
-  // ===========================================
   document.addEventListener("DOMContentLoaded",()=>{
     firebase.auth().onAuthStateChanged(user=>{
       
@@ -661,13 +610,10 @@
       if(!user){
         btnRi.disabled = true;
         btnRi.style.opacity = "0.4";
-        btnRi.style.pointerEvents = "none"; // ←押せない確定
-        btnRi.innerText = "履歴を見る（ログイン必要）"; // 表示文を変える
-
-        // ★ ここを追加：未ログイン時は「あなた」
+        btnRi.style.pointerEvents = "none";
+        btnRi.innerText = "履歴を見る（ログイン必要）"; 
         currentUserName = 'あなた';
 
-        // -------- 未ログイン表示 --------
         loginArea.innerHTML = `
           <div style="display:flex; justify-content:center; margin-top:5px; margin-bottom:10px;">
             <button onclick="googleLogin()" 
@@ -694,10 +640,9 @@
         btnRi.disabled = false;
         btnRi.style.opacity = "1";
         btnRi.style.pointerEvents = "auto";
-        btnRi.innerText = "履歴を見る"; // 通常名に戻す
+        btnRi.innerText = "履歴を見る"; 
 
         currentUserName = user.displayName || user.email || 'あなた';
-        // -------- ログイン状態表示 --------
         loginArea.innerHTML = `
           <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:5px; margin-bottom:10px;">
             <span style="font-size:25px; color:#333;"> <img src="https://developers.google.com/identity/images/g-logo.png" 
@@ -771,8 +716,12 @@
 
     <ul class="news-list">
       <li>
-        <span class="news-date">2025/1/11</span>
+        <span class="news-date">2025/1/13</span>
         <span class="news-badge new">NEW</span>
+        <span class="news-text">演出を追加しました</span>
+      </li>
+      <li>
+        <span class="news-date">2025/1/11</span>
         <span class="news-text">自動センシングモードを追加しました</span>
       </li>
       <li>
@@ -939,7 +888,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      // ▼ Firebase SDK 読み込み後に必ず貼る！ ▼
       firebase.auth().onAuthStateChanged((user) => {
         if (!user) {
           console.log("未ログイン → index内のログインボタンを使用する");
@@ -953,7 +901,6 @@
       // バックエンドのベースURL
       const API_ROOT = 'https://yoyo-backend.kajilab.dev';
 
-      // DOM要素取得
       const btnConnect   = document.getElementById('btnConnect');
       const btnStop      = document.getElementById('btnStop');
       const btnCsvMode   = document.getElementById('btnCsvMode');
@@ -972,7 +919,6 @@
       const demoHeading  = document.getElementById('demoHeading');
       const appTitle  = document.getElementById('appTitle');
       const newsBox       = document.getElementById('newsBox');
-      // ログインしている人の名前（なければ「あなた」）
       let currentUserName = 'あなた';
       let autoStartTime = null;
       let autoRestartEnabled = true;
@@ -987,8 +933,8 @@
       const PRO_MEAN_S = 0.429;
       const PRO_STD_S  = 0.072;
 
-      let q0 = null;        // 初期姿勢
-      let q0_inv = null;    // 逆クォータニオン
+      let q0 = null;        
+      let q0_inv = null;   
 
 
       const i18n = {
@@ -1010,19 +956,13 @@
           heatmapTitle: 'ループ類似度',
           overallScore: '総合評価',
           points: '点',
-
-          // Radar tooltips
           tipSelfSim: '自身の類似度：<br>各ループの繰り返しの一致度。高いほど安定。<br>類似度が高いほど高評価',
           tipMeanLoopTime: 'スナップの強さのばらつき：<br>各ループの指を返すとき（スナップ）の強さの標準偏差。小さいほど一定の強さでループができている。<br>小さいほど高評価',
           tipLoopVar: 'ループ時間のばらつき：<br>各ループ時間の標準偏差。小さいほどリズムが一定。<br>小さいほど高評価',
           tipStableStart: '安定開始ループ：<br>安定し始めるまでに要した周回数。<br>小さいほど高評価',
           tipProSim: 'プロ類似度：<br>プロの動きとの一致度。高いほど近い。<br>高いほど高評価',
-
-          // Heatmap tooltips
           tipSelfHeatmap: 'ループ類似度（自己比較）：<br>i周目とj周目の類似度。<br>青=高い / 赤=低い',
           tipProHeatmap: 'ループ類似度（プロ比較）：<br>各ループとプロの類似度。<br>対角が青いほど一致',
-
-          // Metric labels
           m_totalLoops: '総ループ数',
           m_totalLoops_help: '計測中に実施したインサイド・ループの合計回数',
           m_stableStart: '安定開始',
@@ -1039,8 +979,6 @@
           m_snap_help: '各ループのスナップ最大値の中央値とばらつき',
           unit_sec: '秒',
           unit_ms2: 'm/s²',
-
-          // 追加分（ja）
           analysisPreparing: '解析準備中…',
           selectTwoCsv: '加速度CSVと角速度CSVの2つを選んでください',
           btnSaveCsvLabel: 'CSVを保存',
@@ -1056,8 +994,6 @@
           proHmTitle: 'プロのヒートマップ',
           proVideoTitle: 'プロの実演映像',
           proAnimeTitle: 'プロの指の動き',
-
-          // Misc / alerts
           analysisStarting: '解析開始…',
           analysisDone: '解析完了！',
           connectFailed: '接続失敗',
@@ -1102,18 +1038,15 @@
           proVideoTitle: 'Pro: Demo Video',
           proAnimeTitle: 'Pro: Animation',
 
-          // Radar tooltips
           tipSelfSim: 'Self Similarity:<br>How consistently each loop repeats the same motion.<br>Higher = more stable.',
           tipMeanLoopTime: 'Mean Loop Time:<br>Average time per loop (pros ≈ 0.4s).<br>Shorter = better.',
           tipLoopVar: 'Loop Time Variation:<br>Std. dev. of loop times (rhythm stability).<br>Smaller = better.',
           tipStableStart: 'Stable Start Loop:<br>Loops needed until stabilized.<br>Smaller = better.',
           tipProSim: 'Pro Similarity:<br>Similarity to the pro’s motion.<br>Higher = better.',
 
-          // Heatmap tooltips
           tipSelfHeatmap: 'Loop Similarity (Self vs Self):<br>Similarity between loop i and j.<br>Blue=high / Red=low.',
           tipProHeatmap: 'Loop Similarity (vs Pro):<br>Similarity between your loops and the pro.<br>Bluer diagonal = closer.',
 
-          // Metric labels
           m_totalLoops: 'Total Loops',
           m_totalLoops_help: 'Total number of inside loops during measurement.',
           m_stableStart: 'Stable Start',
@@ -1131,7 +1064,6 @@
           unit_sec: 's',
           unit_ms2: 'm/s²',
 
-          // Misc / alerts
           analysisStarting: 'Starting analysis…',
           analysisDone: 'Analysis complete!',
           connectFailed: 'Connection failed',
@@ -1156,7 +1088,6 @@
       function setHTML(id, html){ const el = document.getElementById(id); if(el) el.innerHTML = html; }
 
       function applyI18nStatic(){
-        // 見出し・ボタン
         setText('appTitle', t('appTitle'));
         setText('demoHeading', t('demoHeading'));
         setText('newsTitle', t('newsBox'));
@@ -1171,10 +1102,7 @@
         setText('gyroTitle', t('gyroTitle'));
         setText('Title', t('titleResult'));
         setText('HeatmapTitle', t('heatmapTitle'));
-        // 保存ボタンのラベル
         setText('btnSaveResult', t('btnSaveResult'));
-
-        // プロ参考データ
         setText('proTitle', t('proTitle'));
         setText('proSegTitle', t('proSegTitle'));
         setText('proHmTitle', t('proHmTitle'));
@@ -1185,9 +1113,6 @@
         setText('proSnap', `${t('proSnap')}: 91.45 ${t('unit_ms2')}`);
         setText('proSnapStd', `${t('proSnapStd')}: 25.80 ${t('unit_ms2')}`);
 
-
-
-        // ツールチップ
         setHTML('tipSelfSim', t('tipSelfSim'));
         setHTML('tipMeanLoopTime', t('tipMeanLoopTime'));
         setHTML('tipLoopVar', t('tipLoopVar'));
@@ -1200,23 +1125,17 @@
         setText('csvTitle', t('csvTitle'));
         setText('accLabel', t('accTitle'));
         setText('gyroLabel', t('gyroTitle'));
-
-        // 進捗初期文言
         setText('progressText', t('analysisPreparing'));
 
-        // タイトル入力プレースホルダ
         const rn = document.getElementById('resultName');
         if (rn) rn.placeholder = t('placeholderTitle');
 
-
-        // html[lang] を更新（スクリーンリーダー向け）
         document.documentElement.lang = lang;
       }
 
       showNews(true);
 
 
-      // 言語セレクタ初期化
       const langSel = document.getElementById('langSelect');
       if (langSel){
         langSel.value = lang;
@@ -1224,21 +1143,17 @@
           lang = e.target.value || 'ja';
           localStorage.setItem('lang', lang);
           applyI18nStatic();
-           // 解析結果があるなら動的部分も再描画
+           
           if (lastResult) {
-            // レーダー見出し（点数の単位など）
             document.getElementById('RadarTitle').innerHTML =
               `<span class="num-red">${t('overallScore')}: ${lastResult.total_score.toFixed(1)} ${t('points')}</span>`;
-            // 指標エリア
             const scoreDiv = document.getElementById('score');
             scoreDiv.innerHTML = buildMetricsHTML(lastResult);
           }
         });
       }
-      // 初期適用
       applyI18nStatic();
 
-      // 動的UI用ヘルパ（状態でボタンラベルを切替）
       function setConnectButtonInitial(){
         setText('btnConnect', t('btnConnectStart'));
       }
@@ -1247,7 +1162,6 @@
       }
 
 
-      // 便利関数
       function showIntroVideo(show=true){
         const v = document.getElementById('introVideo');
         if (v) v.style.display = show ? 'block' : 'none';
@@ -1256,12 +1170,10 @@
       }
 
 
-      // センシングデータ保存用
       let device, controlChar, dataChar, buffer = '';
       const acc  = [], gyro = [];
       let isCsvMode = false;   
 
-      // Chart.js 初期化
       const accCtx  = document.getElementById('accChart').getContext('2d');
       const gyroCtx = document.getElementById('gyroChart').getContext('2d');
       const accData  = { labels: [], datasets: [
@@ -1281,7 +1193,6 @@
       const CONTROL_UUID = '88888888-4abd-ba0d-b7c6-ff0a00200022';
       const DATA_UUID    = '88888888-4abd-ba0d-b7c6-ff0a00200023';
 
-      // 汎用：CSV→JSON
       function csvToJson(text, isAcc=true) {
         const lines = text.trim().split('\n');
         lines.shift();
@@ -1313,9 +1224,6 @@
       };
 
 
-
-
-      // UIリセット
       function resetUIBeforeMeasure() {
         document.getElementById('commentSection').style.display = 'none';
         document.getElementById('radarWrap').style.display = 'none';
@@ -1360,18 +1268,15 @@
         document.getElementById('gyroTitle').style.display = 'none';
       }
 
-      // 解析用ラッパー
       async function runAnalysis(payload) {
         showIntroVideo(false); 
         showNews(false);
-        // タスク開始
         const startRes = await fetch(`${API_ROOT}/start_analysis?lang=${lang}`, { method:'POST' });
         const { task_id } = await startRes.json();
         loadingDiv.style.display = 'block';
         progressBar.style.width = '0%';
         progressText.textContent = t('analysisStarting');
 
-        // ポーリング
         const poll = setInterval(async ()=>{
           const res = await fetch(`${API_ROOT}/progress/${task_id}`);
           if(!res.ok) return;
@@ -1381,7 +1286,6 @@
           if(info.progress>=100) clearInterval(poll);
         },300);
 
-        // 本解析
         const analyzeRes = await fetch(`${API_ROOT}/analyze?task_id=${task_id}&lang=${lang}`, {
           method:'POST',
           headers:{'Content-Type':'application/json'},
@@ -1390,18 +1294,15 @@
         const json = await analyzeRes.json();
 
 
-        // 完了
         clearInterval(poll);
         progressBar.style.width  = '100%';
         progressText.textContent = t('analysisDone');
-        // 少し待ってからローディング非表示
         await new Promise(resolve => setTimeout(resolve, 1000));
         loadingDiv.style.display = 'none';
 
         return json;
       }
 
-      // CSV 解析
       btnCsvMode.onclick  = ()=> csvInput.click();
       csvInput.onchange    = async ()=>{
         showNews(false); 
@@ -1413,7 +1314,6 @@
 
         isCsvMode = true; 
 
-        // ▼ ここを追加：CSV解析中はボタン非表示
         document.getElementById("login-area").style.display="none";
         btnConnect.style.display  = 'none';
         btnCsvMode.style.display  = 'none';
@@ -1433,7 +1333,6 @@
           lastResult = result;
           renderResult(result);
         } catch(err) {
-          // 解析失敗
           alert(t('analysisFailed') + ': ' + err.message);
         }
       };
@@ -1473,9 +1372,8 @@
           document.getElementById('accChart').style.display='block';
           document.getElementById('gyroChart').style.display='block';
           
-           // ボタン表示切り替え
-          btnConnect.style.display   = 'none';               // ← 完全に隠す
-          btnStop.style.display      = 'inline-block';       // ← センシング終了ボタンを出す
+          btnConnect.style.display   = 'none';             
+          btnStop.style.display      = 'inline-block';      
           btnStop.disabled           = false;
           btnCsvMode.style.display   = 'none';
           btnRi.style.display        = 'none';
@@ -1483,30 +1381,25 @@
           btnRestart.style.display  = 'inline-block';
           showIntroVideo(false);
         } catch(err) {
-          // 接続失敗
           alert(t('connectFailed') + ': ' + err.message);
         }
       };
 
       btnCancel.onclick = async () => {
         try {
-          // センサー停止
           try { await controlChar?.writeValue(new Uint8Array([0])); } catch(e){}
           try { 
             await dataChar?.stopNotifications(); 
             dataChar?.removeEventListener('characteristicvaluechanged', handleNotify);
           } catch(e){}
 
-          // UIクリア
           hideMeasureUI();
           resetUIBeforeMeasure();
 
-          // ボタン復帰（初期状態へ）
           showIntroVideo(true);
           showNews(true);
           btnConnect.style.display   = 'inline-block';
           btnConnect.disabled        = false;
-          // 初期状態へ戻すとき
           setConnectButtonInitial();
           btnCsvMode.style.display   = 'inline-block';
           btnRi.style.display        = 'inline-block';
@@ -1516,7 +1409,6 @@
           document.getElementById('autoModeArea').style.display = 'block';
           document.getElementById("login-area").style.display="block";
         } catch (err) {
-          // 中止失敗
           alert(t('cancelFailed') + ': ' + err.message);
         }
       };
@@ -1531,14 +1423,11 @@
       }
 
       btnRestart.onclick = async () => {
-        // いまの計測を確実に停止
         await safeStopMeasure();
 
-        // 取得済みデータ・前回結果などを完全リセット
         resetUIBeforeMeasure();
 
 
-        // ボタン表示を初期状態に戻す（表示まわりはお好みで）
         btnConnect.style.display = 'inline-block';
         btnConnect.disabled      = false;
         btnCsvMode.style.display = 'inline-block';
@@ -1551,7 +1440,6 @@
         showIntroVideo(true);
         showNews(true);
 
-        // 直ちに「接続 & センシング開始」を実行（ユーザーのクリック内なので許可される）
         btnConnect.click();
       
       };
@@ -1583,20 +1471,13 @@
           alert(t('analysisFailed') + ': ' + err.message);
         }
       };
-
-
-      // ==== 自動制御パラメータ ====
-      let restart_threshold = 210;  // m/s²くらい
-      let stop_threshold = 12;      // m/s²くらい
+      let restart_threshold = 210;  
+      let stop_threshold = 12;      
       let noMotionTime = 0;
       let lastTimestamp = null;
-      let autoEnabled = true;      // ボタン残すので切替可能
+      let autoEnabled = true;      
 
 
-
-
-
-      // データ受信ハンドラ
       function handleNotify(event) {
         buffer += new TextDecoder().decode(event.target.value);
         const lines = buffer.split('\n');
@@ -1609,7 +1490,6 @@
             gyro.push({ t,gx,gy,gz });
             const norm = Math.sqrt(ax*ax + ay*ay + az*az);
 
-            // Δt計算（ms→s）
             if (lastTimestamp === null) lastTimestamp = t;
             const dt = (t - lastTimestamp) / 1000;
             lastTimestamp = t;
@@ -1662,13 +1542,10 @@
       async function autoRestart() {
           console.log("AUTO RESTART");
 
-          // --- (1) センサー停止 ---
           try { await controlChar.writeValue(new Uint8Array([0])); } catch(e){}
 
-          // --- (2) 通知を確実に停止 ---
           try { await dataChar.stopNotifications(); } catch(e){}
 
-          // --- (3) データクリア ---
           acc.length = 0;
           gyro.length = 0;
           buffer = '';
@@ -1677,13 +1554,10 @@
           q0 = null;
           q0_inv = null;
 
-          // --- (4) 少し待つ ---
           setTimeout(async ()=>{
               try {
-                  // センサー再スタート
                   await controlChar.writeValue(new Uint8Array([1]));
 
-                  // 通知を確実に再開
                   await dataChar.startNotifications();
                   dataChar.addEventListener('characteristicvaluechanged', handleNotify);
 
@@ -1703,15 +1577,13 @@
       let autoStopLock = false;
 
       async function autoStop() {
-        if (autoStopLock) return; // 多重実行防止
+        if (autoStopLock) return; 
         autoStopLock = true;
 
         console.log("AUTO STOP → btnStop.click()");
 
-        // ボタンと完全に同じ動作
         btnStop.click();
 
-        // ボタンクールダウン時間（必要に応じて調整）
         setTimeout(() => {
           autoStopLock = false;
         }, 2000);
@@ -1724,16 +1596,13 @@
 
         setTimeout(() => {
           toast.style.opacity = 0;
-        }, 500); // 1秒表示
+        }, 500); 
       }
-
-
-
 
 
       // 結果描画
       function renderResult(json){
-        // 見出しや画像など表示
+  
         document.getElementById('Title').style.display='block';
         document.getElementById('RadarTitle').style.display='block';
         document.getElementById('radarChart').style.display='block';
@@ -1744,8 +1613,6 @@
         document.getElementById('proExample').style.display='block';
         document.getElementById('saveSection').style.display='block';
         document.getElementById('btnSaveResult').style.display = 'inline-block';
-
-        // レーダー画像
         const radarImg = document.getElementById('radarChart');
         radarImg.src = `data:image/png;base64,${json.radar_chart}`;
         document.getElementById('RadarTitle').innerHTML =
@@ -1824,7 +1691,7 @@
         document.getElementById('HeatmapTitle').style.display = 'block';
         document.getElementById('Rui').style.display = 'flex';
 
-        // ── ここから「数値の並び順」を scoreDiv に集約して描画 ──
+    
         const totalLoops = json.loop_count;
         const stableStr  = (json.stable_loop !== null) ? `${json.stable_loop} 周目` : 'なし';
         const scoreStr   = `${json.score.toFixed(1)} 点`;
@@ -1848,25 +1715,18 @@
         const proScore100  = (json.pro_score_100   != null) ? `${json.pro_score_100.toFixed(1)} 点` : 'なし';
 
 
-        // ホバー説明はラベル・数値まとめて inline-tip 内に維持
+    
         const scoreDiv = document.getElementById('score');
-        // 元：scoreDiv.innerHTML = `...巨大テンプレ...`;
+    
         scoreDiv.innerHTML = `
           <div class="metric-card">
             ${buildMetricsHTML(json)}
           </div>
         `;
 
-
-        
-
-        
-
-        // 旧表示の領域は重複回避のため非表示
         document.getElementById('proDistance').style.display = 'none';
         document.getElementById('loopSummary').style.display  = 'none';
 
-        // ループ時間の生リスト（任意表示）
         const loopDetails = document.getElementById('loopDetails');
         if (json.loop_duration_list?.length){
           loopDetails.textContent = json.loop_duration_list.join('\n');
@@ -1875,7 +1735,6 @@
           loopDetails.style.display='none';
         }
 
-        // CSV セクション表示
         document.getElementById('hrCsv').style.display   = 'block';
         document.getElementById('csvTitle').style.display = 'block';
         document.getElementById('btnSaveCsv').style.display = 'block';
@@ -1884,13 +1743,11 @@
         document.getElementById('accOutput').style.display  = 'block';
         document.getElementById('gyroOutput').style.display = 'block';
 
-        // acc / gyro の CSV 中身（既存の acc, gyro 配列を使用）
         document.getElementById('accOutput').textContent =
           'time,x,y,z\n' + acc.map(d=>`${d.t},${d.ax},${d.ay},${d.az}`).join('\n');
         document.getElementById('gyroOutput').textContent =
           'time,x,y,z\n' + gyro.map(d=>`${d.t},${d.gx},${d.gy},${d.gz}`).join('\n');
 
-        // ボタン復帰
         const btnConnect = document.getElementById('btnConnect');
         const btnCsvMode = document.getElementById('btnCsvMode');
         const btnRi      = document.getElementById('btnRi');
@@ -1904,6 +1761,37 @@
         btnStop.style.display      = 'none';
         document.getElementById('autoModeArea').style.display = 'block';
 
+        const s = json.total_score;
+
+        if (s >= 70) {
+          if (s < 80) {
+            showConfettiAt(0.5, 0.9);
+          }
+          else if (s < 90) {
+            const origins = [
+              [0.2, 0.6], 
+              [0.8, 0.9], 
+              [0.4, 1.1], 
+            ];
+
+            origins.forEach(([x, y], i) => {
+              setTimeout(() => showConfettiAt(x, y), i * 200);
+            });
+          }
+          else {
+            const shots = 30;   
+            const interval = 50; 
+
+            for (let i = 0; i < shots; i++) {
+              setTimeout(() => {
+                showConfettiAt(
+                  Math.random(),      
+                  Math.random() * 0.8  
+                );
+              }, i * interval);
+            }
+          }
+        }
 
         // ---- Three.js 姿勢アニメーション ----
         if (json.quaternions) {
@@ -1914,9 +1802,6 @@
         const width = container.clientWidth;
         const height = container.clientHeight;
 
-        // --------------------
-        // Scene / Camera
-        // --------------------
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
         camera.position.set(0, 0, 120);
@@ -1926,9 +1811,6 @@
         container.innerHTML = "";
         container.appendChild(renderer.domElement);
 
-        // --------------------
-        // Light
-        // --------------------
         const light1 = new THREE.DirectionalLight(0xffffff, 1.0);
         light1.position.set(50, 50, 100);
         scene.add(light1);
@@ -1936,28 +1818,19 @@
 
         let model = null;
         
-
-
-        // =========================================================
-        // ★ STLモデル固有の「初期向き補正」クォータニオン
-        // =========================================================
-        // ★★★ ここを変えれば必ず見た目が変わる ★★★
         const modelFixQ = new THREE.Quaternion();
         modelFixQ.setFromEuler(new THREE.Euler(
-          THREE.MathUtils.degToRad(90),   // X（←ここを触る）
-          THREE.MathUtils.degToRad(180),    // Y
-          THREE.MathUtils.degToRad(-270)     // Z
+          THREE.MathUtils.degToRad(90),  
+          THREE.MathUtils.degToRad(180),    
+          THREE.MathUtils.degToRad(-270)   
         ));
 
-        // --------------------
-        // STL Load
-        // --------------------
         const loader = new THREE.STLLoader();
         loader.load("中指2.stl", function (geometry) {
           const material = new THREE.MeshStandardMaterial({
-            color: 0xffc9b1,   // 肌色
-            roughness: 0.7,    // 少しザラつき
-            metalness: 0.0    // 金属感なし
+            color: 0xffc9b1,   
+            roughness: 0.7,   
+            metalness: 0.0    
           });
 
           model = new THREE.Mesh(geometry, material);
@@ -1967,44 +1840,36 @@
 
           model.scale.set(6, 6, 6);
 
-
-          // ⚠ rotation.set は使わない（毎フレーム上書きされるため）
           scene.add(model);
         });
 
-        
-
-        // --------------------
-        // Initial calibration
-        // --------------------
+      
         let q0 = null;
         let q0_inv = null;
 
         function applyQuaternion(q) {
           if (!model) return;
 
-          // Python [w,x,y,z] → Three.js
+        
           const threeQ = new THREE.Quaternion(q[1], -q[3], q[2], q[0]);
 
-          // 初期キャリブレーション
+
           if (!q0) {
             q0 = threeQ.clone();
             q0_inv = q0.clone().invert();
             console.log("🎯 初期姿勢キャリブレーション完了");
           }
 
-          // センサ相対回転
+
           const q_rel = q0_inv.clone().multiply(threeQ);
 
-          // ★ 正しい合成順
+      
           const q_final = modelFixQ.clone().multiply(q_rel);
 
           model.setRotationFromQuaternion(q_final);
         }
 
-        // --------------------
-        // Animation
-        // --------------------
+
         let idx = 0;
         function animate() {
           requestAnimationFrame(animate);
@@ -2017,9 +1882,7 @@
           renderer.render(scene, camera);
         }
 
-        // --------------------
-        // IntersectionObserver
-        // --------------------
+ 
         let animationStarted = false;
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -2097,9 +1960,9 @@
             name,
             acc_csv: accCsv,
             gyro_csv: gyroCsv,
-            user_id: user.uid,               // UID
+            user_id: user.uid,           
             user_name: user.displayName || "未設定", 
-            user_email: user.email           // ←★絶対これ
+            user_email: user.email          
         };
 
 
@@ -2129,12 +1992,20 @@
         saveFile(gyroCsv,`${ts}_gyro.csv`);
       };
 
+      function showConfettiAt(x, y) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { x, y }
+        });
+      }
+
+
     
     </script>
   </div>
   <div id="autoToast">
     やり直し
   </div>
-
 </body>
 </html>
