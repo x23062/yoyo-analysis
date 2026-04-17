@@ -24,7 +24,8 @@ from comment_patterns import classify_type, generate_comments, types_dict
 
 
 # フォント設定
-font_path = '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'
+# font_path = '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'
+font_path = "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc"
 font_prop = font_manager.FontProperties(fname=font_path)
 plt.rcParams['font.family'] = font_prop.get_name()
 plt.rcParams['axes.unicode_minus'] = False

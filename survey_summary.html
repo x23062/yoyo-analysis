@@ -129,7 +129,8 @@
     let skillChartInstance = null;
 
     async function loadSurveySummary() {
-      const res = await fetch("https://yoyo-backend.kajilab.dev/survey_summary");
+      // const res = await fetch("https://yoyo-backend.kajilab.dev/survey_summary");
+      const res = await fetch("http://127.0.0.1:5000/survey_summary");
       const data = await res.json();
       console.log("🔹 survey_summary:", data);
 

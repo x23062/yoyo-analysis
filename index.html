@@ -704,7 +704,7 @@
     <button id="btnRestart" style="display:none;">やり直す</button>
     <button id="btnStop" disabled>センシング終了</button>
     <button id="btnCancel"  style="display:none;">中止</button>
-    <button id="btnRi"  onclick="location.href='/viewer'">履歴を見る</button>
+    <button id="btnRi"  onclick="location.href='viewer.html'">履歴を見る</button>
 
 
     <!-- ===== 更新情報 / お知らせ ===== -->
@@ -899,7 +899,8 @@
 
     <script>
       // バックエンドのベースURL
-      const API_ROOT = 'https://yoyo-backend.kajilab.dev';
+      // const API_ROOT = 'https://yoyo-backend.kajilab.dev';
+      const API_ROOT = 'http://127.0.0.1:5000';
 
       const btnConnect   = document.getElementById('btnConnect');
       const btnStop      = document.getElementById('btnStop');
