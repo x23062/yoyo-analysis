@@ -271,7 +271,8 @@ async function drawGraph(){
         snap_std:{min:0,max:null}
     }[metric];
 
-    let url=`https://yoyo-backend.kajilab.dev/results_user_graph?uid=${user.uid}&email=${user.email}`;
+    // let url=`https://yoyo-backend.kajilab.dev/results_user_graph?uid=${user.uid}&email=${user.email}`;
+    let url=`http://127.0.0.1:5000/results_user_graph?uid=${user.uid}&email=${user.email}`;
     if(filterUid) url+=`&filter_uid=${filterUid}`;
 
     const data=await (await fetch(url)).json();
