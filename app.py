@@ -24,10 +24,24 @@ from comment_patterns import classify_type, generate_comments, types_dict
 
 
 # フォント設定
-# font_path = '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'
-font_path = "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc"
-font_prop = font_manager.FontProperties(fname=font_path)
-plt.rcParams['font.family'] = font_prop.get_name()
+# フォント設定
+font_candidates = [
+    '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',   # Linux
+    '/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc',            # macOS
+    '/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc',            # macOS
+    '/System/Library/Fonts/Hiragino Sans GB.ttc',               # macOS fallback
+]
+
+font_prop = None
+for path in font_candidates:
+    if os.path.exists(path):
+        font_prop = font_manager.FontProperties(fname=path)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        break
+
+if font_prop is None:
+    print("⚠️ 日本語フォントが見つからなかったため、matplotlib のデフォルトフォントを使います")
+
 plt.rcParams['axes.unicode_minus'] = False
 
 app = Flask(__name__)
@@ -1341,7 +1355,8 @@ def get_results_user_graph():
 
 
 
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=8001, threaded=True)
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, threaded=True)
-
-
+    app.run(host="127.0.0.1", port=5000, threaded=True, debug=True)
