@@ -126,7 +126,9 @@ I18N = {
     }
 }
 
-DB_PATH = "results.db"
+# DB_PATH = "results.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "results.db")
 ADMIN_EMAIL = "prj.yoyo@gmail.com"
 
 
@@ -141,7 +143,7 @@ def add_user_column():
         conn.commit()
     conn.close()
 
-add_user_column()  
+# add_user_column()  
 
 def add_user_name_column():
     conn = sqlite3.connect(DB_PATH)
@@ -153,7 +155,7 @@ def add_user_name_column():
         conn.commit()
     conn.close()
 
-add_user_name_column()
+# add_user_name_column()
 
 def add_email_column():
     conn = sqlite3.connect(DB_PATH)
@@ -165,7 +167,7 @@ def add_email_column():
         conn.commit()
     conn.close()
 
-add_email_column()
+# add_email_column()
 
 def encode_1d_heatmap(values: np.ndarray, title: str, lang="ja") -> str:
     """
@@ -274,7 +276,10 @@ def init_db():
 
 
 print("📂 Using database file:", os.path.abspath(DB_PATH))
-
+init_db()
+add_user_column()
+add_user_name_column()
+add_email_column()
 
 def save_result_to_db(result, user_id, user_name=None, email=None):
     conn = sqlite3.connect(DB_PATH)
@@ -313,19 +318,27 @@ def save_result_to_db(result, user_id, user_name=None, email=None):
         result.get("gyro_csv"),
         result.get("snap_median"),
         result.get("snap_std"),
+        # result.get("loop_duration_list"),
+        # result.get("loop_max_acc_list"),
+        # result.get("user_id"),
+        # result.get("user_name"),   
+        # result.get("email") ,
+        # result.get("type"),
+        # json.dumps(result.get("comments"), ensure_ascii=False)
         result.get("loop_duration_list"),
         result.get("loop_max_acc_list"),
-        result.get("user_id"),
-        result.get("user_name"),   
-        result.get("email") ,
+        user_id,
+        user_name,
+        email,
         result.get("type"),
         json.dumps(result.get("comments"), ensure_ascii=False)
 
     ))
     conn.commit()
     conn.close()
+    
+# init_db()
 
-init_db()
 
 # ── 進捗 API ─────────────────────────────────────────
 @app.route('/start_analysis', methods=['POST'])
