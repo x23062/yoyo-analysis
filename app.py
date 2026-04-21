@@ -129,7 +129,7 @@ I18N = {
 # DB_PATH = "results.db"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "results.db")
-ADMIN_EMAIL = "prj.yoyo@gmail.com"
+ADMIN_EMAIL = "yoyoloopingsystem@gmail.com"
 
 
 def add_user_column():
