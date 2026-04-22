@@ -864,17 +864,17 @@ const firebaseConfig = {
       <h3 id="proSnap"></h3>
       <h3 id="proSnapStd"></h3>
       <h3 id="proSegTitle"></h3>
-      <img src="/pro_segu.png" alt="プロのループ検出図" style="width: 100%; max-width: 1200px;" />
+      <img src="/static/pro_segu.png" alt="プロのループ検出図" style="width: 100%; max-width: 1200px;" />
       <h3 id="proHmTitle"></h3>
-      <img src="/pro_heatmap.png" alt="プロのヒートマップ" style="width: 100%; max-width: 800px;" />
+      <img src="/static/pro_heatmap.png" alt="プロのヒートマップ" style="width: 100%; max-width: 800px;" />
       <h3 id="proVideoTitle"></h3>
       <video controls style="max-width: 60%;">
-        <source src="/pro.mp4" type="video/mp4" />
+        <source src="/static/pro.mp4" type="video/mp4" />
         お使いのブラウザは動画に対応していません。
       </video>
       <h3 id="proAnimeTitle"></h3>
       <video controls style="max-width: 60%;">
-        <source src="/proanime.mp4" type="video/mp4" />
+        <source src="/static/proanime.mp4" type="video/mp4" />
         お使いのブラウザは動画に対応していません。
       </video>
     </div>
@@ -1830,7 +1830,7 @@ const firebaseConfig = {
         ));
 
         const loader = new THREE.STLLoader();
-        loader.load("nakayubi.stl", function (geometry) {
+        loader.load("/static/nakayubi.stl", function (geometry) {
           const material = new THREE.MeshStandardMaterial({
             color: 0xffc9b1,   
             roughness: 0.7,   
