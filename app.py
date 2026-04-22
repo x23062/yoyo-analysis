@@ -24,7 +24,6 @@ from comment_patterns import classify_type, generate_comments, types_dict
 
 
 # フォント設定
-# フォント設定
 font_candidates = [
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',   # Linux
     '/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc',            # macOS
