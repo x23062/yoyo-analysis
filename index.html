@@ -700,11 +700,25 @@ const firebaseConfig = {
     <h5 id="appTitle">ルーピング・アーチ系トリック技能評価システム<br></h5>
 
     <div style="margin: 16px 0;">
-      <label for="loopTypeSelect" style="font-size:18px; margin-right:8px;">技能評価するトリック:</label>
-      <select id="loopTypeSelect" style="font-size:18px; padding:8px 10px;">
-        <option value="inside">インサイド・ループ</option>
-        <option value="outside">アウトサイド・ループ</option>
+      <label for="loopTypeSelect" style="font-size:24px; margin-right:8px;">使用する手</label>
+      <select id="loopTypeSelect" style="font-size:24px; padding:8px 10px;">
+        <option value="right">右手</option>
+        <option value="left">左手</option>
+        <option value="both">両手</option>
+      </select>
+    </div>
+
+    <div style="margin: 16px 0;">
+      <label for="loopTypeSelect" style="font-size:24px; margin-right:8px;">技能評価するトリック:</label>
+      <select id="loopTypeSelect" style="font-size:24px; padding:8px 10px;">
+        <option value="inside_loop">インサイド・ループ</option>
+        <option value="outside_loop">アウトサイド・ループ</option>
+        <option value="inout_loop">インアウト・ループ</option>
         <option value="hop_the_fence">ホップ・ザ・フェンス</option>
+        <option value="outside_hop">アウトサイド・ホップ</option>
+        <option value="over_the_fence">オーバー・ザ・フェンス</option>
+        <option value="fountain">ファウンテン</option>
+        <option value="shoot_the_moon">シュート・ザ・ムーン</option>
       </select>
     </div>
 
