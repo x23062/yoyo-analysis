@@ -727,27 +727,29 @@ const firebaseConfig = {
 
     <div id="login-area" style="margin-top:20px;"></div>
 
-    <div class="setting-row">
-      <label for="handSelect">使用する手</label>
-      <select id="handSelect">
-        <option value="right">右手</option>
-        <option value="left">左手</option>
-        <option value="both">両手</option>
-      </select>
-    </div>
+    <div id="settingArea">
+      <div class="setting-row">
+        <label for="handSelect">使用する手</label>
+        <select id="handSelect">
+          <option value="right">右手</option>
+          <option value="left">左手</option>
+          <option value="both">両手</option>
+        </select>
+      </div>
 
-    <div class="setting-row">
-      <label for="trickSelect">技能評価するトリック</label>
-      <select id="trickSelect">
-        <option value="inside_loop">インサイド・ループ</option>
-        <option value="outside_loop">アウトサイド・ループ</option>
-        <option value="inout_loop">インアウト・ループ</option>
-        <option value="hop_the_fence">ホップ・ザ・フェンス</option>
-        <option value="outside_hop">アウトサイド・ホップ</option>
-        <option value="over_the_fence">オーバー・ザ・フェンス</option>
-        <option value="fountain">ファウンテン</option>
-        <option value="shoot_the_moon">シュート・ザ・ムーン</option>
-      </select>
+      <div class="setting-row">
+        <label for="trickSelect">技能評価するトリック</label>
+        <select id="trickSelect">
+          <option value="inside_loop">インサイド・ループ</option>
+          <option value="outside_loop">アウトサイド・ループ</option>
+          <option value="inout_loop">インアウト・ループ</option>
+          <option value="hop_the_fence">ホップ・ザ・フェンス</option>
+          <option value="outside_hop">アウトサイド・ホップ</option>
+          <option value="over_the_fence">オーバー・ザ・フェンス</option>
+          <option value="fountain">ファウンテン</option>
+          <option value="shoot_the_moon">シュート・ザ・ムーン</option>
+        </select>
+      </div>
     </div>
     
     <button id="btnConnect">接続 &amp; センシング開始</button>
@@ -973,6 +975,7 @@ const firebaseConfig = {
       const demoHeading  = document.getElementById('demoHeading');
       const appTitle  = document.getElementById('appTitle');
       const newsBox       = document.getElementById('newsBox');
+      const settingArea = document.getElementById('settingArea');
       let currentUserName = 'あなた';
       let autoStartTime = null;
       let autoRestartEnabled = true;
@@ -1374,6 +1377,7 @@ const firebaseConfig = {
         btnRi.style.display       = 'none';
         btnStop.style.display    = 'none';
         document.getElementById('autoModeArea').style.display = 'none';
+        settingArea.style.display = 'none';
 
         showIntroVideo(false);
 
@@ -1433,6 +1437,7 @@ const firebaseConfig = {
           btnRi.style.display        = 'none';
           btnCancel.style.display   = 'inline-block';
           btnRestart.style.display  = 'inline-block';
+          settingArea.style.display = 'none';
           showIntroVideo(false);
         } catch(err) {
           alert(t('connectFailed') + ': ' + err.message);
@@ -1462,6 +1467,7 @@ const firebaseConfig = {
           btnRestart.style.display   = 'none';
           document.getElementById('autoModeArea').style.display = 'block';
           document.getElementById("login-area").style.display="block";
+          settingArea.style.display = 'block';
         } catch (err) {
           alert(t('cancelFailed') + ': ' + err.message);
         }
@@ -1814,6 +1820,7 @@ const firebaseConfig = {
         btnRi.style.display        = 'inline-block';
         btnStop.style.display      = 'none';
         document.getElementById('autoModeArea').style.display = 'block';
+        settingArea.style.display = 'block';
 
         const s = json.total_score;
 
