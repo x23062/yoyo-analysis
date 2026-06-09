@@ -7,3 +7,5 @@ __pycache__/
 results.db
 
 .DS_Store
+
+nohup.out
