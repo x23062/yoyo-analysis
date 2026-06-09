@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 import urllib.parse
 import traceback
 from comment_patterns import classify_type, generate_comments, types_dict
+from flask import send_from_directory
 
 
 
@@ -354,6 +355,11 @@ def get_progress(task_id):
     if not info:
         return jsonify({'error': 'Unknown task_id'}), 404
     return jsonify(info)
+
+@app.route("/viewer.html")
+def viewer():
+    return send_from_directory(".", "viewer.html")
+
 
 # ── ヘルパー関数 ─────────────────────────────────────
 def encode_heatmap(mat: np.ndarray, title: str) -> str:
