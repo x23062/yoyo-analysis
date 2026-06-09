@@ -66,12 +66,12 @@ select{
 <script>
 /* ================= Firebase ================= */
 firebase.initializeApp({
-    apiKey:"AIzaSyCIoMI9P-shqBz6RF38L_V9PG3bl5J7Pbc",
-    authDomain:"yoyo-sensing.firebaseapp.com",
-    projectId:"yoyo-sensing",
-    storageBucket:"yoyo-sensing.firebasestorage.app",
-    messagingSenderId:"129908163482",
-    appId:"1:129908163482:web:8cb1c024e25b2c9a96f023"
+  apiKey: "AIzaSyDqRcCbtg0_D_XxAkDendEWgqKrgkPboeQ",
+  authDomain: "yoyo-looping-system.firebaseapp.com",
+  projectId: "yoyo-looping-system",
+  storageBucket: "yoyo-looping-system.firebasestorage.app",
+  messagingSenderId: "1058941430823",
+  appId: "1:1058941430823:web:bcefe6322d67969e8eb202",
 });
 
 const ADMIN_EMAIL = "yoyoloopingsystem@gmail.com";
@@ -328,7 +328,7 @@ document.getElementById("metric-select").onchange=e=>{
 };
 
 firebase.auth().onAuthStateChanged(u=>{
-    if(!u) location.href="login.html";
+    if(!u) location.href="/";
     drawGraph();
 });
 </script>
