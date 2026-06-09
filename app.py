@@ -360,6 +360,14 @@ def get_progress(task_id):
 def viewer():
     return send_from_directory(".", "viewer.html")
 
+@app.route("/history_graph.html")
+def history_graph():
+    return send_from_directory(".", "history_graph.html")
+
+@app.route("/survey_summary.html")#なんかAPIと同じになるかもしれないから変えるかも
+def survey_summary_page():
+    return send_from_directory(".", "survey_summary.html")
+
 
 # ── ヘルパー関数 ─────────────────────────────────────
 def encode_heatmap(mat: np.ndarray, title: str) -> str:
