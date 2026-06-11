@@ -612,7 +612,8 @@ def analyze():
         acc_df  = pd.DataFrame(payload['acc'])
         gyro_df = pd.DataFrame(payload['gyro'])
         if hand == "left":
-            gyro_df["gy"] = -gyro_df["gy"]
+            gyro_df["gx"] = -gyro_df["gx"]
+            gyro_df["gz"] = -gyro_df["gz"]
         gyro_df['z'] = pd.to_numeric(gyro_df['gz'], errors='coerce')
         t0 = acc_df['t'].iloc[0]
         dt = (acc_df['t'].iloc[1] - t0) / 1000.0
