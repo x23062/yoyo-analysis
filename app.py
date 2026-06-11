@@ -21,6 +21,7 @@ import urllib.parse
 import traceback
 from comment_patterns import classify_type, generate_comments, types_dict
 from flask import send_from_directory
+from analysis.config import TRICK_CONFIG
 
 
 
@@ -593,10 +594,25 @@ def analyze():
         set_progress(task_id, 15, "recv_input")
         payload = request.get_json(force=True)
 
+        hand = payload.get("hand", "right")
+        trick = payload.get("trick", "inside_loop")
+
+        if hand not in ["right", "left"]:
+            return jsonify({"error": f"Unsupported hand: {hand}"}), 400
+
+        config = TRICK_CONFIG.get(trick)
+
+        if config is None:
+            return jsonify({"error": f"Unsupported trick: {trick}"}), 400
+
+        print(f"[ANALYZE] hand={hand}, trick={trick}")
+
         # 4: データ前処理
         set_progress(task_id, 20, "preprocess")
         acc_df  = pd.DataFrame(payload['acc'])
         gyro_df = pd.DataFrame(payload['gyro'])
+        if hand == "left":
+            gyro_df["gy"] = -gyro_df["gy"]
         gyro_df['z'] = pd.to_numeric(gyro_df['gz'], errors='coerce')
         t0 = acc_df['t'].iloc[0]
         dt = (acc_df['t'].iloc[1] - t0) / 1000.0
@@ -614,9 +630,28 @@ def analyze():
 
         # 6: フィルタ＆ピーク検出
         set_progress(task_id, 30, "extrema")
-        y = savgol_filter(gyro_df['gy'], window_length=11, polyorder=3)
-        peaks, _   = find_peaks(y, height=y.mean()+y.std())
-        valleys, _ = find_peaks(-y, height=y.std()-y.mean())
+        # y = savgol_filter(gyro_df['gy'], window_length=11, polyorder=3)
+        # peaks, _   = find_peaks(y, height=y.mean()+y.std())
+        # valleys, _ = find_peaks(-y, height=y.std()-y.mean())
+        axis = config["axis"]
+        peak_std = config["peak_std"]
+        valley_std = config["valley_std"]
+
+        y = savgol_filter(
+            gyro_df[axis],
+            window_length=11,
+            polyorder=3
+        )
+
+        peaks, _ = find_peaks(
+            y,
+            height=y.mean() + peak_std * y.std()
+        )
+
+        valleys, _ = find_peaks(
+            -y,
+            height=valley_std * y.std() - y.mean()
+        )
 
         # 7: ループ検出
         set_progress(task_id, 35, "segment")
@@ -625,11 +660,22 @@ def analyze():
         i = 0
         while i < len(valleys)-1:
             v1 = valleys[i]
-            ps = [p for p in peaks if p>v1 and y[p]>y.mean()+y.std()]
+            # ps = [p for p in peaks if p>v1 and y[p]>y.mean()+y.std()]
+            ps = [
+                p for p in peaks
+                if p > v1 and y[p] > y.mean() + peak_std * y.std()
+            ]
             if ps:
                 p = ps[0]
-                vs2 = [v for v in valleys if v>p and y[v]<y.std()-y.mean()]
-                if vs2 and (t_sec.iloc[vs2[0]]-t_sec.iloc[v1])<=1.0:
+                # vs2 = [v for v in valleys if v>p and y[v]<y.std()-y.mean()]
+                vs2 = [
+                    v for v in valleys
+                    if v > p and y[v] < y.mean() - valley_std * y.std()
+                ]
+                # if vs2 and (t_sec.iloc[vs2[0]]-t_sec.iloc[v1])<=1.0:
+                if vs2 and (
+                    t_sec.iloc[vs2[0]] - t_sec.iloc[v1]
+                ) <= config["max_loop_sec"]:
                     loops.append((v1, p, vs2[0]))
                     i = valleys.tolist().index(vs2[0])
                     continue
@@ -729,7 +775,11 @@ def analyze():
 
         # 14: 安定開始ループ検出
         set_progress(task_id, 80, "stable")
-        stable_loop = detect_stable_loop_by_tail(dtw_mat, threshold_ratio=0.3)
+        # stable_loop = detect_stable_loop_by_tail(dtw_mat, threshold_ratio=0.3)
+        stable_loop = detect_stable_loop_by_tail(
+            dtw_mat,
+            threshold_ratio=config["stable_threshold_ratio"]
+        )
 
         # 15: ループ時間＆最大加速度
         set_progress(task_id, 85, "loop_time")
