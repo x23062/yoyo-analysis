@@ -9,9 +9,9 @@ TRICK_CONFIG = {
 
     "outside_loop": {
         "axis": "gy",
-        "peak_std": 0.80,
-        "valley_std": 0.80,
+        "peak_std": 0.90,
+        "valley_std": 0.90,
         "max_loop_sec": 1.20,
-        "stable_threshold_ratio": 0.35,
+        "stable_threshold_ratio": 0.30,
     }
 }
