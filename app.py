@@ -578,23 +578,14 @@ def analyze():
         # 0: 開始
         set_progress(task_id, 0, "start")
 
-        # 1: プロデータ読込
-        set_progress(task_id, 5, "load_pro")
-        pro_acc, pro_gyro = "3_acc2.csv", "3_gyro2.csv"
-        gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
-
-        # 2: プロループ抽出
-        set_progress(task_id, 10, "seg_pro")
-        pro_segments = segment_loops(gyro_pro, quats_pro)
-
-        # 3: JSON受信
+        # 1: JSON受信
         set_progress(task_id, 15, "recv_input")
         payload = request.get_json(force=True)
 
         hand = payload.get("hand", "right")
         trick = payload.get("trick", "inside_loop")
 
-        if hand not in ["right", "left"]:
+        if hand not in ["right", "left", "both"]:
             return jsonify({"error": f"Unsupported hand: {hand}"}), 400
 
         config = TRICK_CONFIG.get(trick)
@@ -602,15 +593,27 @@ def analyze():
         if config is None:
             return jsonify({"error": f"Unsupported trick: {trick}"}), 400
 
+        # 2: プロデータ読込
+        set_progress(task_id, 5, "load_pro")
+        if hand == "left":
+            pro_acc, pro_gyro = "3_acc2_left.csv", "3_gyro2_left.csv"
+        else:
+            pro_acc, pro_gyro = "3_acc2.csv", "3_gyro2.csv"
+        gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
+
+        # 3: プロループ抽出
+        set_progress(task_id, 10, "seg_pro")
+        pro_segments = segment_loops(gyro_pro, quats_pro)
+
         print(f"[ANALYZE] hand={hand}, trick={trick}")
 
         # 4: データ前処理
         set_progress(task_id, 20, "preprocess")
         acc_df  = pd.DataFrame(payload['acc'])
         gyro_df = pd.DataFrame(payload['gyro'])
-        if hand == "left":
-            gyro_df["gx"] = -gyro_df["gx"]
-            gyro_df["gz"] = -gyro_df["gz"]
+        # if hand == "left":
+        #     gyro_df["gx"] = -gyro_df["gx"]
+        #     gyro_df["gz"] = -gyro_df["gz"]
         gyro_df['z'] = pd.to_numeric(gyro_df['gz'], errors='coerce')
         t0 = acc_df['t'].iloc[0]
         dt = (acc_df['t'].iloc[1] - t0) / 1000.0
