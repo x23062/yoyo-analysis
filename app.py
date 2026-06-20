@@ -485,9 +485,9 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
 
 
     if pro_distance is None:  s_pro=0
-    elif pro_distance<=40:    s_pro=5
-    elif pro_distance>=150:   s_pro=0
-    else:                     s_pro=5*(150-pro_distance)/(150-40)
+    elif pro_distance<=30:    s_pro=5
+    elif pro_distance>=130:   s_pro=0
+    else:                     s_pro=5*(130-pro_distance)/(130-30)
 
     if labels is None:
         labels = ['自身の類似度','平均ループ時間','ループ時間のばらつき','安定開始ループ','プロ類似度']
