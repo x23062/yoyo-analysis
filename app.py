@@ -578,6 +578,20 @@ def analyze():
         # 0: 開始
         set_progress(task_id, 0, "start")
 
+        # 2: プロデータ読込
+        set_progress(task_id, 5, "load_pro")
+        if hand == "left":
+            pro_acc, pro_gyro = "3_acc2_left.csv", "3_gyro2_left.csv"
+        else:
+            pro_acc, pro_gyro = "3_acc2.csv", "3_gyro2.csv"
+        gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
+
+        # 3: プロループ抽出
+        set_progress(task_id, 10, "seg_pro")
+        pro_segments = segment_loops(gyro_pro, quats_pro)
+
+        print(f"[ANALYZE] hand={hand}, trick={trick}")
+
         # 1: JSON受信
         set_progress(task_id, 15, "recv_input")
         payload = request.get_json(force=True)
@@ -593,19 +607,19 @@ def analyze():
         if config is None:
             return jsonify({"error": f"Unsupported trick: {trick}"}), 400
 
-        # 2: プロデータ読込
-        set_progress(task_id, 5, "load_pro")
-        if hand == "left":
-            pro_acc, pro_gyro = "3_acc2_left.csv", "3_gyro2_left.csv"
-        else:
-            pro_acc, pro_gyro = "3_acc2.csv", "3_gyro2.csv"
-        gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
+        # # 2: プロデータ読込
+        # set_progress(task_id, 5, "load_pro")
+        # if hand == "left":
+        #     pro_acc, pro_gyro = "3_acc2_left.csv", "3_gyro2_left.csv"
+        # else:
+        #     pro_acc, pro_gyro = "3_acc2.csv", "3_gyro2.csv"
+        # gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
 
-        # 3: プロループ抽出
-        set_progress(task_id, 10, "seg_pro")
-        pro_segments = segment_loops(gyro_pro, quats_pro)
+        # # 3: プロループ抽出
+        # set_progress(task_id, 10, "seg_pro")
+        # pro_segments = segment_loops(gyro_pro, quats_pro)
 
-        print(f"[ANALYZE] hand={hand}, trick={trick}")
+        # print(f"[ANALYZE] hand={hand}, trick={trick}")
 
         # 4: データ前処理
         set_progress(task_id, 20, "preprocess")
