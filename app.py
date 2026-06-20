@@ -464,9 +464,9 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
 
 
     if loop_std is None:      s_std=0
-    elif loop_std<=0.05:      s_std=5
-    elif loop_std>=0.2:       s_std=0
-    else:                     s_std=5*(0.2-loop_std)/(0.2-0.05)
+    elif loop_std<=0.08:      s_std=5
+    elif loop_std>=0.3:       s_std=0
+    else:                     s_std=5*(0.3-loop_std)/(0.3-0.08)
 
     if stable_loop is None or loop_count is None:
         s_stable = 0
@@ -918,12 +918,12 @@ def analyze():
         # loop_var = s_std
         if loop_std_duration is None:
             s_loopvar = 0
-        elif loop_std_duration <= 0.05:
+        elif loop_std_duration <= 0.08:
             s_loopvar = 5
-        elif loop_std_duration >= 0.2:
+        elif loop_std_duration >= 0.3:
             s_loopvar = 0
         else:
-            s_loopvar = 5 * (0.2 - loop_std_duration) / (0.2 - 0.05)
+            s_loopvar = 5 * (0.3 - loop_std_duration) / (0.3 - 0.08)
 
         # stable_start = s_stable
         if stable_loop is None or n is None:
