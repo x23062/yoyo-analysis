@@ -644,43 +644,108 @@ def analyze():
             polyorder=3
         )
 
+        # peaks, _ = find_peaks(
+        #     y,
+        #     height=y.mean() + peak_std * y.std()
+        # )
+
+        # valleys, _ = find_peaks(
+        #     -y,
+        #     height=valley_std * y.std() - y.mean()
+        # )
+
+        # 極値の二重検出を防ぐ設定
+        t_sec = (gyro_df['t'] - t0) / 1000.0
+        dt_sec = float(np.median(np.diff(t_sec)))
+
+        min_extrema_interval_sec = 0.25
+        min_distance = max(1, int(min_extrema_interval_sec / dt_sec))
+
+        prominence = 0.35 * y.std()
+
         peaks, _ = find_peaks(
             y,
-            height=y.mean() + peak_std * y.std()
+            height=y.mean() + peak_std * y.std(),
+            distance=min_distance,
+            prominence=prominence
         )
 
         valleys, _ = find_peaks(
             -y,
-            height=valley_std * y.std() - y.mean()
+            height=valley_std * y.std() - y.mean(),
+            distance=min_distance,
+            prominence=prominence
         )
+        print("peaks =", len(peaks))
+        print("valleys =", len(valleys))
 
         # 7: ループ検出
         set_progress(task_id, 35, "segment")
-        t_sec = (gyro_df['t'] - t0) / 1000.0
+        # t_sec = (gyro_df['t'] - t0) / 1000.0
+        # loops = []
+        # i = 0
+        # while i < len(valleys)-1:
+        #     v1 = valleys[i]
+        #     # ps = [p for p in peaks if p>v1 and y[p]>y.mean()+y.std()]
+        #     ps = [
+        #         p for p in peaks
+        #         if p > v1 and y[p] > y.mean() + peak_std * y.std()
+        #     ]
+        #     if ps:
+        #         p = ps[0]
+        #         # vs2 = [v for v in valleys if v>p and y[v]<y.std()-y.mean()]
+        #         vs2 = [
+        #             v for v in valleys
+        #             if v > p and y[v] < y.mean() - valley_std * y.std()
+        #         ]
+        #         # if vs2 and (t_sec.iloc[vs2[0]]-t_sec.iloc[v1])<=1.0:
+        #         if vs2 and (
+        #             t_sec.iloc[vs2[0]] - t_sec.iloc[v1]
+        #         ) <= config["max_loop_sec"]:
+        #             loops.append((v1, p, vs2[0]))
+        #             i = valleys.tolist().index(vs2[0])
+        #             continue
+        #     i += 1
+
+        # 7: ループ検出
+        set_progress(task_id, 35, "segment")
+
         loops = []
         i = 0
-        while i < len(valleys)-1:
-            v1 = valleys[i]
-            # ps = [p for p in peaks if p>v1 and y[p]>y.mean()+y.std()]
-            ps = [
-                p for p in peaks
-                if p > v1 and y[p] > y.mean() + peak_std * y.std()
+        valleys_list = valleys.tolist()
+
+        while i < len(valleys_list) - 1:
+            v1 = valleys_list[i]
+
+            # v1 の次に来る谷候補を探す
+            candidate_v2 = [
+                v for v in valleys_list[i+1:]
+                if 0.3 <= (t_sec.iloc[v] - t_sec.iloc[v1]) <= config["max_loop_sec"]
             ]
-            if ps:
-                p = ps[0]
-                # vs2 = [v for v in valleys if v>p and y[v]<y.std()-y.mean()]
-                vs2 = [
-                    v for v in valleys
-                    if v > p and y[v] < y.mean() - valley_std * y.std()
-                ]
-                # if vs2 and (t_sec.iloc[vs2[0]]-t_sec.iloc[v1])<=1.0:
-                if vs2 and (
-                    t_sec.iloc[vs2[0]] - t_sec.iloc[v1]
-                ) <= config["max_loop_sec"]:
-                    loops.append((v1, p, vs2[0]))
-                    i = valleys.tolist().index(vs2[0])
-                    continue
-            i += 1
+
+            if not candidate_v2:
+                i += 1
+                continue
+
+            v2 = candidate_v2[0]
+
+            # v1〜v2 の間にあるピークだけを見る
+            candidate_peaks = [
+                p for p in peaks
+                if v1 < p < v2
+            ]
+
+            if not candidate_peaks:
+                i += 1
+                continue
+
+            # 1周内で一番高いピークだけ採用
+            p = max(candidate_peaks, key=lambda idx: y[idx])
+
+            loops.append((v1, p, v2))
+
+            # 次の探索は v2 から開始
+            i = valleys_list.index(v2)
 
         # 8: 自己比較行列計算
         set_progress(task_id, 40, "self_sim")
