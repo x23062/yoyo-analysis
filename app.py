@@ -909,14 +909,22 @@ def analyze():
         s_self = 0 if score is None else min(max((score/100)*5, 0), 5)
 
         # snap_var = s_snap
-        if snap_std is None:
-            s_snap = 0
-        elif snap_std <= 15:
+        # if snap_std is None:
+        #     s_snap = 0
+        # elif snap_std <= 15:
+        #     s_snap = 5
+        # elif snap_std >= 60:
+        #     s_snap = 0
+        # else:
+        #     s_snap = 5 * (60 - snap_std) / (60 - 15)
+        if snap_std <= 20:
             s_snap = 5
-        elif snap_std >= 60:
+
+        elif snap_std >= 80:
             s_snap = 0
+
         else:
-            s_snap = 5 * (60 - snap_std) / (60 - 15)
+            s_snap = 5 * (80 - snap_std) / (80 - 20)
 
         # loop_var = s_std
         if loop_std_duration is None:
