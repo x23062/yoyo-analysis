@@ -448,9 +448,9 @@ def segment_loops(gyro, quats):
 def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, loop_count, labels=None):
     # 各指標を0〜5にスケーリング
     if score is None:         s_score=0
-    elif score>=100:          s_score=5
+    elif score>=80:          s_score=5
     elif score<=0:            s_score=0
-    else:                     s_score=(score/100)*5
+    else:                     s_score=(score/80)*5
 
     if snap_std is None:
         s_snap = 0
@@ -903,7 +903,7 @@ def analyze():
 
         # ---- 5点スケールへ変換（レーダーチャートと同じロジックを再利用） ----
         # self_sim = s_score
-        s_self = 0 if score is None else min(max((score/100)*5, 0), 5)
+        s_self = 0 if score is None else min(max((score/80)*5, 0), 5)
 
         # snap_var = s_snap
         if snap_std is None:
