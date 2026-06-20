@@ -456,10 +456,10 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_snap = 0
     elif snap_std <= 20:
         s_snap = 5  
-    elif snap_std >= 80:
+    elif snap_std >= 70:
         s_snap = 0    
     else:
-        s_snap = 5 * (80 - snap_std) / (80 - 20)
+        s_snap = 5 * (70 - snap_std) / (70 - 20)
 
 
 
@@ -910,10 +910,10 @@ def analyze():
             s_snap = 0
         elif snap_std <= 20:
             s_snap = 5
-        elif snap_std >= 80:
+        elif snap_std >= 70:
             s_snap = 0
         else:
-            s_snap = 5 * (80 - snap_std) / (80 - 20)
+            s_snap = 5 * (70 - snap_std) / (70 - 20)
 
         # loop_var = s_std
         if loop_std_duration is None:
