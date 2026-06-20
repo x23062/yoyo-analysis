@@ -473,8 +473,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
     else:
      
         scale = loop_count / 10.0  
-        max_full_score_loop = int(round(2 * scale))   
-        min_full_zero_loop = int(round(7 * scale))  
+        max_full_score_loop = int(round(3 * scale))   
+        min_full_zero_loop = int(round(8 * scale))  
 
         if stable_loop <= max_full_score_loop:
             s_stable = 5
