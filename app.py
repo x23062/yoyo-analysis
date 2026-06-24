@@ -598,9 +598,9 @@ def analyze():
         # 2: プロデータ読込
         set_progress(task_id, 5, "load_pro")
         if hand == "left":
-            pro_acc, pro_gyro = "3_acc2_left.csv", "3_gyro2_left.csv"
+            pro_acc, pro_gyro = "./pro_csv/okada/inside_loop/left/3_acc2_left.csv", "./pro_csv/okada/inside_loop/left/3_gyro2_left.csv"
         else:
-            pro_acc, pro_gyro = "3_acc2.csv", "3_gyro2.csv"
+            pro_acc, pro_gyro = "./pro_csv/okada/inside_loop/right/3_acc2_right.csv", "./pro_csv/okada/inside_loop/right/3_gyro2_right.csv"
         gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
 
         # 3: プロループ抽出
