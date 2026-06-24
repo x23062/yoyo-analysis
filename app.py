@@ -451,21 +451,21 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_score = 0
     else:
         ratio = min(max(score, 0), 85) / 85
-        s_score = 5 * (ratio ** 2)
+        s_score = 5 * (ratio ** 1.5)
         # 旧線形スケール: s_score = (score/85)*5
 
     if snap_std is None:
         s_snap = 0
     else:
         ratio = min(max((80 - snap_std) / (80 - 20), 0), 1)
-        s_snap = 5 * (ratio ** 2)
+        s_snap = 5 * (ratio ** 1.5)
         # 旧線形スケール: s_snap = 5 * (80 - snap_std) / (80 - 20)
 
     if loop_std is None:
         s_std = 0
     else:
         ratio = min(max((0.3 - loop_std) / (0.3 - 0.08), 0), 1)
-        s_std = 5 * (ratio ** 2)
+        s_std = 5 * (ratio ** 1.5)
         # 旧線形スケール: s_std = 5 * (0.3 - loop_std) / (0.3 - 0.08)
 
     if stable_loop is None or loop_count is None:
@@ -488,7 +488,7 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_pro = 0
     else:
         ratio = min(max((130 - pro_distance) / (130 - 30), 0), 1)
-        s_pro = 5 * (ratio ** 2)
+        s_pro = 5 * (ratio ** 1.5)
         # 旧線形スケール: s_pro = 5 * (130 - pro_distance) / (130 - 30)
 
     if labels is None:
@@ -912,7 +912,7 @@ def analyze():
             s_self = 0
         else:
             ratio = min(max(score, 0), 85) / 85
-            s_self = 5 * (ratio ** 2)
+            s_self = 5 * (ratio ** 1.5)
             # 旧線形スケール: s_self = min(max((score/85)*5, 0), 5)
 
         # snap_var = s_snap
@@ -920,7 +920,7 @@ def analyze():
             s_snap = 0
         else:
             ratio = min(max((80 - snap_std) / (80 - 20), 0), 1)
-            s_snap = 5 * (ratio ** 2)
+            s_snap = 5 * (ratio ** 1.5)
             # 旧線形スケール:
             # if snap_std <= 20:
             #     s_snap = 5
@@ -934,7 +934,7 @@ def analyze():
             s_loopvar = 0
         else:
             ratio = min(max((0.3 - loop_std_duration) / (0.3 - 0.08), 0), 1)
-            s_loopvar = 5 * (ratio ** 2)
+            s_loopvar = 5 * (ratio ** 1.5)
             # 旧線形スケール:
             # if loop_std_duration <= 0.08:
             #     s_loopvar = 5
