@@ -447,34 +447,33 @@ def segment_loops(gyro, quats):
 
 def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, loop_count, labels=None):
     # 各指標を0〜5にスケーリング
-    if score is None:         s_score=0
-    elif score>=85:          s_score=5
-    elif score<=0:            s_score=0
-    else:                     s_score=(score/85)*5
+    if score is None or score <= 0:
+        s_score = 0
+    else:
+        ratio = min(max(score, 0), 85) / 85
+        s_score = 5 * (ratio ** 2)
+        # 旧線形スケール: s_score = (score/85)*5
 
     if snap_std is None:
         s_snap = 0
-    elif snap_std <= 20:
-        s_snap = 5  
-    elif snap_std >= 80:
-        s_snap = 0    
     else:
-        s_snap = 5 * (80 - snap_std) / (80 - 20)
+        ratio = min(max((80 - snap_std) / (80 - 20), 0), 1)
+        s_snap = 5 * (ratio ** 2)
+        # 旧線形スケール: s_snap = 5 * (80 - snap_std) / (80 - 20)
 
-
-
-    if loop_std is None:      s_std=0
-    elif loop_std<=0.08:      s_std=5
-    elif loop_std>=0.3:       s_std=0
-    else:                     s_std=5*(0.3-loop_std)/(0.3-0.08)
+    if loop_std is None:
+        s_std = 0
+    else:
+        ratio = min(max((0.3 - loop_std) / (0.3 - 0.08), 0), 1)
+        s_std = 5 * (ratio ** 2)
+        # 旧線形スケール: s_std = 5 * (0.3 - loop_std) / (0.3 - 0.08)
 
     if stable_loop is None or loop_count is None:
         s_stable = 0
     else:
-     
-        scale = loop_count / 10.0  
-        max_full_score_loop = int(round(3 * scale))   
-        min_full_zero_loop = int(round(8 * scale))  
+        scale = loop_count / 10.0
+        max_full_score_loop = int(round(3 * scale))
+        min_full_zero_loop = int(round(8 * scale))
 
         if stable_loop <= max_full_score_loop:
             s_stable = 5
@@ -482,12 +481,15 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
             s_stable = 0
         else:
             s_stable = 5 * (min_full_zero_loop - stable_loop) / (min_full_zero_loop - max_full_score_loop)
+        # 旧しきい値: max_full_score_loop = int(round(2 * scale))
+        # 旧しきい値: min_full_zero_loop = int(round(7 * scale))
 
-
-    if pro_distance is None:  s_pro=0
-    elif pro_distance<=30:    s_pro=5
-    elif pro_distance>=130:   s_pro=0
-    else:                     s_pro=5*(130-pro_distance)/(130-30)
+    if pro_distance is None:
+        s_pro = 0
+    else:
+        ratio = min(max((130 - pro_distance) / (130 - 30), 0), 1)
+        s_pro = 5 * (ratio ** 2)
+        # 旧線形スケール: s_pro = 5 * (130 - pro_distance) / (130 - 30)
 
     if labels is None:
         labels = ['自身の類似度','平均ループ時間','ループ時間のばらつき','安定開始ループ','プロ類似度']
@@ -611,9 +613,9 @@ def analyze():
         set_progress(task_id, 20, "preprocess")
         acc_df  = pd.DataFrame(payload['acc'])
         gyro_df = pd.DataFrame(payload['gyro'])
-        # if hand == "left":
-        #     gyro_df["gx"] = -gyro_df["gx"]
-        #     gyro_df["gz"] = -gyro_df["gz"]
+        if hand == "left":
+            gyro_df["gx"] = -gyro_df["gx"]
+            gyro_df["gz"] = -gyro_df["gz"]
         gyro_df['z'] = pd.to_numeric(gyro_df['gz'], errors='coerce')
         t0 = acc_df['t'].iloc[0]
         dt = (acc_df['t'].iloc[1] - t0) / 1000.0
@@ -906,41 +908,57 @@ def analyze():
 
         # ---- 5点スケールへ変換（レーダーチャートと同じロジックを再利用） ----
         # self_sim = s_score
-        s_self = 0 if score is None else min(max((score/85)*5, 0), 5)
+        if score is None or score <= 0:
+            s_self = 0
+        else:
+            ratio = min(max(score, 0), 85) / 85
+            s_self = 5 * (ratio ** 2)
+            # 旧線形スケール: s_self = min(max((score/85)*5, 0), 5)
 
         # snap_var = s_snap
         if snap_std is None:
             s_snap = 0
-        elif snap_std <= 20:
-            s_snap = 5
-        elif snap_std >= 80:
-            s_snap = 0
         else:
-            s_snap = 5 * (80 - snap_std) / (80 - 20)
+            ratio = min(max((80 - snap_std) / (80 - 20), 0), 1)
+            s_snap = 5 * (ratio ** 2)
+            # 旧線形スケール:
+            # if snap_std <= 20:
+            #     s_snap = 5
+            # elif snap_std >= 80:
+            #     s_snap = 0
+            # else:
+            #     s_snap = 5 * (80 - snap_std) / (80 - 20)
 
         # loop_var = s_std
         if loop_std_duration is None:
             s_loopvar = 0
-        elif loop_std_duration <= 0.08:
-            s_loopvar = 5
-        elif loop_std_duration >= 0.3:
-            s_loopvar = 0
         else:
-            s_loopvar = 5 * (0.3 - loop_std_duration) / (0.3 - 0.08)
+            ratio = min(max((0.3 - loop_std_duration) / (0.3 - 0.08), 0), 1)
+            s_loopvar = 5 * (ratio ** 2)
+            # 旧線形スケール:
+            # if loop_std_duration <= 0.08:
+            #     s_loopvar = 5
+            # elif loop_std_duration >= 0.3:
+            #     s_loopvar = 0
+            # else:
+            #     s_loopvar = 5 * (0.3 - loop_std_duration) / (0.3 - 0.08)
 
         # stable_start = s_stable
         if stable_loop is None or n is None:
             s_stable = 0
         else:
             scale = n / 10.0
-            max_full = int(round(2 * scale))
-            min_zero = int(round(7 * scale))
+            max_full = int(round(3 * scale))
+            min_zero = int(round(8 * scale))
             if stable_loop <= max_full:
                 s_stable = 5
             elif stable_loop >= min_zero:
                 s_stable = 0
             else:
                 s_stable = 5 * (min_zero - stable_loop) / (min_zero - max_full)
+            # 旧しきい値:
+            # max_full = int(round(2 * scale))
+            # min_zero = int(round(7 * scale))
 
         # pro_sim = s_pro_5（レーダーチャート内で作った値）
         s_pro = s_pro_5
