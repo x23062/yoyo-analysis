@@ -1089,7 +1089,14 @@ def analyze():
                 'weaknesses': [comments["weakness"]],
                 'suggestions': [comments["improvement"]],
             },
-            "quaternions": quaternions
+            "quaternions": quaternions,
+            'debug_pro_data': {
+                'player': player,
+                'trick': trick,
+                'hand': hand,
+                'pro_acc': pro_acc,
+                'pro_gyro': pro_gyro
+            }
         }
         return jsonify(result)
     except Exception:

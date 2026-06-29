@@ -1365,6 +1365,17 @@ const firebaseConfig = {
         });
         const json = await analyzeRes.json();
 
+        // デバッグ：プロデータ情報をコンソールに出力
+        if(json.debug_pro_data) {
+          console.log('=== プロデータ比較情報 ===');
+          console.log('プレイヤー:', json.debug_pro_data.player);
+          console.log('トリック:', json.debug_pro_data.trick);
+          console.log('手:', json.debug_pro_data.hand);
+          console.log('ACC ファイル:', json.debug_pro_data.pro_acc);
+          console.log('GYRO ファイル:', json.debug_pro_data.pro_gyro);
+          console.log('=======================');
+        }
+
 
         clearInterval(poll);
         progressBar.style.width  = '100%';
