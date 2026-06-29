@@ -634,7 +634,9 @@ def analyze():
         set_progress(task_id, 10, "seg_pro")
         pro_segments = segment_loops(gyro_pro, quats_pro)
 
-        print(f"[ANALYZE] hand={hand}, trick={trick}")
+        print(f"[ANALYZE] hand={hand}, trick={trick}, player={player}")
+        print(f"[PRO_DATA] ACC: {pro_acc}")
+        print(f"[PRO_DATA] GYRO: {pro_gyro}")
 
         # 4: データ前処理
         set_progress(task_id, 20, "preprocess")
