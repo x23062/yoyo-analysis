@@ -15,6 +15,7 @@ import math
 from matplotlib import font_manager
 import sqlite3
 import os
+import glob
 from flask import Flask, request, jsonify, send_file, Response
 from datetime import datetime, timedelta
 import urllib.parse
@@ -597,10 +598,36 @@ def analyze():
 
         # 2: プロデータ読込
         set_progress(task_id, 5, "load_pro")
-        if hand == "left":
-            pro_acc, pro_gyro = "./pro_csv/okada/inside_loop/left/3_acc2_left.csv", "./pro_csv/okada/inside_loop/left/3_gyro2_left.csv"
-        else:
-            pro_acc, pro_gyro = "./pro_csv/okada/inside_loop/right/3_acc2_right.csv", "./pro_csv/okada/inside_loop/right/3_gyro2_right.csv"
+        # フロントから選択されたプレイヤーを受け取る（未指定時は okada）
+        player = payload.get("player", "okada")
+
+        # 探索優先: pro_csv/<player>/<trick>/<hand> 内の acc/gyro ファイルを使う
+        def find_pro_files(player_name, trick_name, hand_name):
+            base_dir = os.path.join(BASE_DIR, "pro_csv", player_name, trick_name, hand_name)
+            if not os.path.isdir(base_dir):
+                return None, None
+            acc_candidates = glob.glob(os.path.join(base_dir, "*acc*.csv"))
+            gyro_candidates = glob.glob(os.path.join(base_dir, "*gyro*.csv"))
+            if acc_candidates and gyro_candidates:
+                # 先頭の候補を使う
+                return acc_candidates[0], gyro_candidates[0]
+            return None, None
+
+        pro_acc, pro_gyro = find_pro_files(player, trick, hand)
+
+        # 見つからなければ okada の該当トリック/手を試す
+        if not pro_acc or not pro_gyro:
+            pro_acc, pro_gyro = find_pro_files('okada', trick, hand)
+
+        # 最終フォールバック（従来のハードコード）
+        if not pro_acc or not pro_gyro:
+            if hand == "left":
+                pro_acc = os.path.join(BASE_DIR, "pro_csv", "okada", "inside_loop", "left", "3_acc2_left.csv")
+                pro_gyro = os.path.join(BASE_DIR, "pro_csv", "okada", "inside_loop", "left", "3_gyro2_left.csv")
+            else:
+                pro_acc = os.path.join(BASE_DIR, "pro_csv", "okada", "inside_loop", "right", "3_acc2_right.csv")
+                pro_gyro = os.path.join(BASE_DIR, "pro_csv", "okada", "inside_loop", "right", "3_gyro2_right.csv")
+
         gyro_pro, quats_pro = load_and_compute_quaternions(pro_acc, pro_gyro)
 
         # 3: プロループ抽出

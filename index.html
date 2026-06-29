@@ -1356,11 +1356,12 @@ const firebaseConfig = {
 
         const hand = document.getElementById('handSelect').value;
         const trick = document.getElementById('trickSelect').value;
+        const player = document.getElementById('playerSelect') ? document.getElementById('playerSelect').value : 'okada';
 
         const analyzeRes = await fetch(`${API_ROOT}/analyze?task_id=${task_id}&lang=${lang}`, {
           method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({ ...payload, lang, hand, trick })
+          body:JSON.stringify({ ...payload, lang, hand, trick, player })
         });
         const json = await analyzeRes.json();
 
