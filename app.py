@@ -447,30 +447,53 @@ def segment_loops(gyro, quats):
     return segments
 
 def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, loop_count, labels=None):
+    debug = {
+        "inputs": {
+            "score": score,
+            "snap_std": snap_std,
+            "loop_std": loop_std,
+            "stable_loop": stable_loop,
+            "pro_distance": pro_distance,
+            "loop_count": loop_count,
+        },
+        "pre_power_values": {},
+        "post_power_values": {},
+    }
+
     # 各指標を0〜5にスケーリング
     if score is None or score <= 0:
         s_score = 0
+        ratio_score = 0.0
     else:
-        ratio = min(max(score, 0), 85) / 85
-        s_score = 5 * (ratio ** 1.2)
+        ratio_score = min(max(score, 0), 85) / 85
+        s_score = 5 * (ratio_score ** 1.2)
         # 旧線形スケール: s_score = (score/85)*5
+    debug["pre_power_values"]["score"] = ratio_score
+    debug["post_power_values"]["score"] = s_score
 
     if snap_std is None:
         s_snap = 0
+        ratio_snap = 0.0
     else:
-        ratio = min(max((80 - snap_std) / (80 - 20), 0), 1)
-        s_snap = 5 * (ratio ** 1.2)
+        ratio_snap = min(max((80 - snap_std) / (80 - 20), 0), 1)
+        s_snap = 5 * (ratio_snap ** 1.2)
         # 旧線形スケール: s_snap = 5 * (80 - snap_std) / (80 - 20)
+    debug["pre_power_values"]["snap_std"] = ratio_snap
+    debug["post_power_values"]["snap_std"] = s_snap
 
     if loop_std is None:
         s_std = 0
+        ratio_loop_std = 0.0
     else:
-        ratio = min(max((0.3 - loop_std) / (0.3 - 0.08), 0), 1)
-        s_std = 5 * (ratio ** 1.2)
+        ratio_loop_std = min(max((0.3 - loop_std) / (0.3 - 0.08), 0), 1)
+        s_std = 5 * (ratio_loop_std ** 1.2)
         # 旧線形スケール: s_std = 5 * (0.3 - loop_std) / (0.3 - loop_std) / (0.3 - 0.08)
+    debug["pre_power_values"]["loop_std"] = ratio_loop_std
+    debug["post_power_values"]["loop_std"] = s_std
 
     if stable_loop is None or loop_count is None:
         s_stable = 0
+        stable_pre_power = 0.0
     else:
         scale = loop_count / 10.0
         max_full_score_loop = int(round(3 * scale))
@@ -478,19 +501,27 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
 
         if stable_loop <= max_full_score_loop:
             s_stable = 5
+            stable_pre_power = 5.0
         elif stable_loop >= min_full_zero_loop:
             s_stable = 0
+            stable_pre_power = 0.0
         else:
-            s_stable = 5 * (min_full_zero_loop - stable_loop) / (min_full_zero_loop - max_full_score_loop)
+            stable_pre_power = 5 * (min_full_zero_loop - stable_loop) / (min_full_zero_loop - max_full_score_loop)
+            s_stable = stable_pre_power
         # 旧しきい値: max_full_score_loop = int(round(2 * scale))
         # 旧しきい値: min_full_zero_loop = int(round(7 * scale))
+    debug["pre_power_values"]["stable_loop"] = stable_pre_power
+    debug["post_power_values"]["stable_loop"] = s_stable
 
     if pro_distance is None:
         s_pro = 0
+        ratio_pro = 0.0
     else:
-        ratio = min(max((130 - pro_distance) / (130 - 30), 0), 1)
-        s_pro = 5 * (ratio ** 1.2)
+        ratio_pro = min(max((130 - pro_distance) / (130 - 30), 0), 1)
+        s_pro = 5 * (ratio_pro ** 1.2)
         # 旧線形スケール: s_pro = 5 * (130 - pro_distance) / (130 - 30)
+    debug["pre_power_values"]["pro_distance"] = ratio_pro
+    debug["post_power_values"]["pro_distance"] = s_pro
 
     if labels is None:
         labels = ['自身の類似度','平均ループ時間','ループ時間のばらつき','安定開始ループ','プロ類似度']
@@ -514,7 +545,7 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
     buf = BytesIO()
     fig.savefig(buf, format='png', bbox_inches='tight')
     plt.close(fig)
-    return base64.b64encode(buf.getvalue()).decode('ascii'), float(avg_score), float(s_pro)
+    return base64.b64encode(buf.getvalue()).decode('ascii'), float(avg_score), float(s_pro), debug
 
 # 安定開始ループ検出用
 # def detect_stable_loop_by_tail(dtw_matrix):
@@ -922,7 +953,7 @@ def analyze():
 
 
 
-        radar_b64, total_score, s_pro_5 = generate_radar_chart(
+        radar_b64, total_score, s_pro_5, radar_debug = generate_radar_chart(
             score=score,
             snap_std=snap_std,   
             loop_std=loop_std_duration,
@@ -1068,6 +1099,7 @@ def analyze():
             'loop_plot': loop_plot_b64,
             'compare_plot': compare_plot_b64,
             'radar_chart': radar_b64,
+            'radar_debug': radar_debug,
             'total_score': total_score,
             'score': score,
             'raw_self_distance': raw_self_distance, 

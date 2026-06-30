@@ -1365,6 +1365,13 @@ const firebaseConfig = {
         });
         const json = await analyzeRes.json();
 
+        if (json.radar_debug) {
+          console.log('=== レーダーチャート計算デバッグ ===');
+          console.log('入力値:', json.radar_debug.inputs);
+          console.log('1.2乗前の値:', json.radar_debug.pre_power_values);
+          console.log('1.2乗後の値:', json.radar_debug.post_power_values);
+        }
+
         // デバッグ：プロデータ情報をコンソールに出力
         if(json.debug_pro_data) {
           console.log('=== プロデータ比較情報 ===');
