@@ -461,13 +461,13 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
     }
 
     # 各指標を0〜5にスケーリング
+    # 2026/07/09 のインサイドループ用チューニング値
     if score is None or score <= 0:
         s_score = 0
         ratio_score = 0.0
     else:
-        ratio_score = min(max(score, 0), 85) / 85
-        s_score = 5 * (ratio_score ** 1.2)
-        # 旧線形スケール: s_score = (score/85)*5
+        ratio_score = min(max((70 - score) / (70 - 50), 0), 1)
+        s_score = 5 * (ratio_score ** 1.3)
     debug["pre_power_values"]["score"] = ratio_score
     debug["post_power_values"]["score"] = s_score
 
@@ -475,9 +475,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_snap = 0
         ratio_snap = 0.0
     else:
-        ratio_snap = min(max((80 - snap_std) / (80 - 20), 0), 1)
-        s_snap = 5 * (ratio_snap ** 1.2)
-        # 旧線形スケール: s_snap = 5 * (80 - snap_std) / (80 - 20)
+        ratio_snap = min(max((45 - snap_std) / (45 - 20), 0), 1)
+        s_snap = 5 * (ratio_snap ** 1.3)
     debug["pre_power_values"]["snap_std"] = ratio_snap
     debug["post_power_values"]["snap_std"] = s_snap
 
@@ -485,9 +484,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_std = 0
         ratio_loop_std = 0.0
     else:
-        ratio_loop_std = min(max((0.3 - loop_std) / (0.3 - 0.08), 0), 1)
+        ratio_loop_std = min(max((0.16 - loop_std) / (0.16 - 0.08), 0), 1)
         s_std = 5 * (ratio_loop_std ** 1.2)
-        # 旧線形スケール: s_std = 5 * (0.3 - loop_std) / (0.3 - loop_std) / (0.3 - 0.08)
     debug["pre_power_values"]["loop_std"] = ratio_loop_std
     debug["post_power_values"]["loop_std"] = s_std
 
@@ -496,8 +494,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         stable_pre_power = 0.0
     else:
         scale = loop_count / 10.0
-        max_full_score_loop = int(round(3 * scale))
-        min_full_zero_loop = int(round(8 * scale))
+        max_full_score_loop = int(round(2 * scale))
+        min_full_zero_loop = int(round(5 * scale))
 
         if stable_loop <= max_full_score_loop:
             s_stable = 5
@@ -517,9 +515,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_pro = 0
         ratio_pro = 0.0
     else:
-        ratio_pro = min(max((130 - pro_distance) / (130 - 30), 0), 1)
+        ratio_pro = min(max((90 - pro_distance) / (90 - 30), 0), 1)
         s_pro = 5 * (ratio_pro ** 1.2)
-        # 旧線形スケール: s_pro = 5 * (130 - pro_distance) / (130 - 30)
     debug["pre_power_values"]["pro_distance"] = ratio_pro
     debug["post_power_values"]["pro_distance"] = s_pro
 
