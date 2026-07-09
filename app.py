@@ -494,8 +494,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         stable_pre_power = 0.0
     else:
         scale = loop_count / 10.0
-        max_full_score_loop = int(round(2 * scale))
-        min_full_zero_loop = int(round(5 * scale))
+        max_full_score_loop = int(round(3 * scale))
+        min_full_zero_loop = int(round(8 * scale))
 
         if stable_loop <= max_full_score_loop:
             s_stable = 5
@@ -507,7 +507,7 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
             stable_pre_power = 5 * (min_full_zero_loop - stable_loop) / (min_full_zero_loop - max_full_score_loop)
             s_stable = stable_pre_power
         # 旧しきい値: max_full_score_loop = int(round(2 * scale))
-        # 旧しきい値: min_full_zero_loop = int(round(7 * scale))
+        # 旧しきい値: min_full_zero_loop = int(round(5 * scale))
     debug["pre_power_values"]["stable_loop"] = stable_pre_power
     debug["post_power_values"]["stable_loop"] = s_stable
 
