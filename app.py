@@ -466,7 +466,7 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_score = 0
         ratio_score = 0.0
     else:
-        ratio_score = min(max((70 - score) / (70 - 50), 0), 1)
+        ratio_score = min(max((score - 50) / (70 - 50), 0), 1)
         s_score = 5 * (ratio_score ** 1.3)
     debug["pre_power_values"]["score"] = ratio_score
     debug["post_power_values"]["score"] = s_score
