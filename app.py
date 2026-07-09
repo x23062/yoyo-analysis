@@ -466,8 +466,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_score = 0
         ratio_score = 0.0
     else:
-        ratio_score = min(max((score - 50) / (70 - 50), 0), 1)
-        s_score = 5 * (ratio_score ** 1.3)
+        ratio_score = min(max((score - 45) / (75 - 45), 0), 1)
+        s_score = 5 * (ratio_score ** 1.2)
     debug["pre_power_values"]["score"] = ratio_score
     debug["post_power_values"]["score"] = s_score
 
@@ -475,8 +475,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_snap = 0
         ratio_snap = 0.0
     else:
-        ratio_snap = min(max((45 - snap_std) / (45 - 20), 0), 1)
-        s_snap = 5 * (ratio_snap ** 1.3)
+        ratio_snap = min(max((50 - snap_std) / (50 - 20), 0), 1)
+        s_snap = 5 * (ratio_snap ** 1.2)
     debug["pre_power_values"]["snap_std"] = ratio_snap
     debug["post_power_values"]["snap_std"] = s_snap
 
@@ -484,8 +484,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_std = 0
         ratio_loop_std = 0.0
     else:
-        ratio_loop_std = min(max((0.16 - loop_std) / (0.16 - 0.08), 0), 1)
-        s_std = 5 * (ratio_loop_std ** 1.2)
+        ratio_loop_std = min(max((0.18 - loop_std) / (0.18 - 0.08), 0), 1)
+        s_std = 5 * (ratio_loop_std ** 1.15)
     debug["pre_power_values"]["loop_std"] = ratio_loop_std
     debug["post_power_values"]["loop_std"] = s_std
 
@@ -515,8 +515,8 @@ def generate_radar_chart(score, snap_std, loop_std, stable_loop, pro_distance, l
         s_pro = 0
         ratio_pro = 0.0
     else:
-        ratio_pro = min(max((90 - pro_distance) / (90 - 30), 0), 1)
-        s_pro = 5 * (ratio_pro ** 1.2)
+        ratio_pro = min(max((100 - pro_distance) / (100 - 30), 0), 1)
+        s_pro = 5 * (ratio_pro ** 1.1)
     debug["pre_power_values"]["pro_distance"] = ratio_pro
     debug["post_power_values"]["pro_distance"] = s_pro
 
