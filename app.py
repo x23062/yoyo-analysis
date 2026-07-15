@@ -134,6 +134,47 @@ DB_PATH = os.path.join(BASE_DIR, "results.db")
 ADMIN_EMAIL = "yoyoloopingsystem@gmail.com"
 
 
+def resolve_pro_data_files(base_dir, player_name, trick_name, hand_name):
+    def find_pro_files(player, trick, hand):
+        candidate_dirs = []
+        if hand:
+            candidate_dirs.append(os.path.join(base_dir, "pro_csv", player, trick, hand))
+        candidate_dirs.append(os.path.join(base_dir, "pro_csv", player, trick, "both"))
+        candidate_dirs.append(os.path.join(base_dir, "pro_csv", player, trick))
+
+        for candidate_dir in candidate_dirs:
+            if not os.path.isdir(candidate_dir):
+                continue
+
+            acc_candidates = glob.glob(os.path.join(candidate_dir, "*acc*.csv"))
+            gyro_candidates = glob.glob(os.path.join(candidate_dir, "*gyro*.csv"))
+            if acc_candidates and gyro_candidates:
+                return acc_candidates[0], gyro_candidates[0]
+
+        return None, None
+
+    player_candidates = []
+    if player_name:
+        player_candidates.append(player_name)
+    for fallback_player in ["kato", "takagi", "takami", "okada"]:
+        if fallback_player not in player_candidates:
+            player_candidates.append(fallback_player)
+
+    for candidate_player in player_candidates:
+        pro_acc, pro_gyro = find_pro_files(candidate_player, trick_name, hand_name)
+        if pro_acc and pro_gyro:
+            return pro_acc, pro_gyro
+
+    # 旧来の後方互換フォールバック。インアウトループでは同トリックのデータを優先する。
+    fallback_trick = trick_name if trick_name == "inout_loop" else "inside_loop"
+    for candidate_player in ["okada", "kato", "takagi", "takami"]:
+        pro_acc, pro_gyro = find_pro_files(candidate_player, fallback_trick, hand_name)
+        if pro_acc and pro_gyro:
+            return pro_acc, pro_gyro
+
+    return None, None
+
+
 def add_user_column():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
@@ -629,25 +670,8 @@ def analyze():
         # フロントから選択されたプレイヤーを受け取る（未指定時は okada）
         player = payload.get("player", "okada")
 
-        # 探索優先: pro_csv/<player>/<trick>/<hand> 内の acc/gyro ファイルを使う
-        def find_pro_files(player_name, trick_name, hand_name):
-            base_dir = os.path.join(BASE_DIR, "pro_csv", player_name, trick_name, hand_name)
-            if not os.path.isdir(base_dir):
-                return None, None
-            acc_candidates = glob.glob(os.path.join(base_dir, "*acc*.csv"))
-            gyro_candidates = glob.glob(os.path.join(base_dir, "*gyro*.csv"))
-            if acc_candidates and gyro_candidates:
-                # 先頭の候補を使う
-                return acc_candidates[0], gyro_candidates[0]
-            return None, None
+        pro_acc, pro_gyro = resolve_pro_data_files(BASE_DIR, player, trick, hand)
 
-        pro_acc, pro_gyro = find_pro_files(player, trick, hand)
-
-        # 見つからなければ okada の該当トリック/手を試す
-        if not pro_acc or not pro_gyro:
-            pro_acc, pro_gyro = find_pro_files('okada', trick, hand)
-
-        # 最終フォールバック（従来のハードコード）
         if not pro_acc or not pro_gyro:
             if hand == "left":
                 pro_acc = os.path.join(BASE_DIR, "pro_csv", "okada", "inside_loop", "left", "3_acc2_left.csv")
