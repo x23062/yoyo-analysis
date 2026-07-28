@@ -716,18 +716,8 @@ def analyze():
         set_progress(task_id, 30, "extrema")
         axis = config["axis"]
 
-        if trick == "inout_loop":
-            peak_std = min(
-                config.get("peak_std_in", 1.0),
-                config.get("peak_std_out", 1.0)
-            )
-            valley_std = min(
-                config.get("valley_std_in", 1.0),
-                config.get("valley_std_out", 1.0)
-            )
-        else:
-            peak_std = config.get("peak_std", 1.0)
-            valley_std = config.get("valley_std", 1.0)
+        peak_std = config.get("peak_std", 1.0)
+        valley_std = config.get("valley_std", 1.0)
 
         y = savgol_filter(
             gyro_df[axis],
@@ -801,101 +791,31 @@ def analyze():
         # 7: ループ検出
         set_progress(task_id, 35, "segment")
 
+        # 元の単一閾値による検出（インアウト未対応の旧処理）
         loops = []
-        valleys_list = valleys.tolist()
-
-        if trick == "inout_loop":
-            # in/out を交互検出するため、サブループ（in または out）ごとに閾値を変えて検出
-            subloops = []  # (v1,p,v2, kind)
-            i = 0
-            expected = "in"
-            mean_y = y.mean()
-            std_y = y.std()
-            max_sub = config.get("max_sub_loop_sec", 1.0)
-
-            while i < len(valleys_list) - 1:
-                v1 = valleys_list[i]
-                candidate_v2 = [
-                    v for v in valleys_list[i+1:]
-                    if 0.1 <= (t_sec.iloc[v] - t_sec.iloc[v1]) <= max_sub
+        i = 0
+        while i < len(valleys)-1:
+            v1 = valleys[i]
+            # ps = [p for p in peaks if p>v1 and y[p]>y.mean()+y.std()]
+            ps = [
+                p for p in peaks
+                if p > v1 and y[p] > y.mean() + peak_std * y.std()
+            ]
+            if ps:
+                p = ps[0]
+                # vs2 = [v for v in valleys if v>p and y[v]<y.std()-y.mean()]
+                vs2 = [
+                    v for v in valleys
+                    if v > p and y[v] < y.mean() - valley_std * y.std()
                 ]
-                if not candidate_v2:
-                    i += 1
+                # if vs2 and (t_sec.iloc[vs2[0]]-t_sec.iloc[v1])<=1.0:
+                if vs2 and (
+                    t_sec.iloc[vs2[0]] - t_sec.iloc[v1]
+                ) <= config["max_loop_sec"]:
+                    loops.append((v1, p, vs2[0]))
+                    i = valleys.tolist().index(vs2[0])
                     continue
-                v2 = candidate_v2[0]
-
-                candidate_peaks = [p for p in peaks if v1 < p < v2]
-                if not candidate_peaks:
-                    i += 1
-                    continue
-                p = max(candidate_peaks, key=lambda idx: y[idx])
-
-                if expected == "in":
-                    ok = (
-                        y[p] > mean_y + config.get("peak_std_in", 1.0) * std_y and
-                        y[v1] < mean_y - config.get("valley_std_in", 1.0) * std_y and
-                        y[v2] < mean_y - config.get("valley_std_in", 1.0) * std_y
-                    )
-                else:
-                    ok = (
-                        y[p] > mean_y + config.get("peak_std_out", 0.6) * std_y and
-                        y[v1] < mean_y - config.get("valley_std_out", 0.6) * std_y and
-                        y[v2] < mean_y - config.get("valley_std_out", 0.6) * std_y
-                    )
-
-                if ok:
-                    subloops.append((v1, p, v2, expected))
-                    expected = "out" if expected == "in" else "in"
-                    i = valleys_list.index(v2)
-                else:
-                    i += 1
-
-            # サブループを in->out のペアにして1周とみなす
-            # j = 0
-            # while j < len(subloops) - 1:
-            #     a = subloops[j]
-            #     b = subloops[j+1]
-            #     if a[3] == "in" and b[3] == "out":
-            #         # 1周は in の開始谷から out の終了谷まで
-            #         loops.append((a[0], a[1], b[2]))
-            #         j += 2
-            #     else:
-            #         j += 1
-        else:
-            # 従来の単一閾値による検出
-            i = 0
-            while i < len(valleys_list) - 1:
-                v1 = valleys_list[i]
-
-                # v1 の次に来る谷候補を探す
-                candidate_v2 = [
-                    v for v in valleys_list[i+1:]
-                    if 0.3 <= (t_sec.iloc[v] - t_sec.iloc[v1]) <= config["max_loop_sec"]
-                ]
-
-                if not candidate_v2:
-                    i += 1
-                    continue
-
-                v2 = candidate_v2[0]
-
-                # v1〜v2 の間にあるピークだけを見る
-                candidate_peaks = [
-                    p for p in peaks
-                    if v1 < p < v2
-                ]
-
-                if not candidate_peaks:
-                    i += 1
-                    continue
-
-                # 1周内で一番高いピークだけ採用
-                p = max(candidate_peaks, key=lambda idx: y[idx])
-
-                loops.append((v1, p, v2))
-
-                # 次の探索は v2 から開始
-                i = valleys_list.index(v2)
+            i += 1
 
         # 8: 自己比較行列計算
         set_progress(task_id, 40, "self_sim")
