@@ -851,16 +851,16 @@ def analyze():
                     i += 1
 
             # サブループを in->out のペアにして1周とみなす
-            j = 0
-            while j < len(subloops) - 1:
-                a = subloops[j]
-                b = subloops[j+1]
-                if a[3] == "in" and b[3] == "out":
-                    # 1周は in の開始谷から out の終了谷まで
-                    loops.append((a[0], a[1], b[2]))
-                    j += 2
-                else:
-                    j += 1
+            # j = 0
+            # while j < len(subloops) - 1:
+            #     a = subloops[j]
+            #     b = subloops[j+1]
+            #     if a[3] == "in" and b[3] == "out":
+            #         # 1周は in の開始谷から out の終了谷まで
+            #         loops.append((a[0], a[1], b[2]))
+            #         j += 2
+            #     else:
+            #         j += 1
         else:
             # 従来の単一閾値による検出
             i = 0
